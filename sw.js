@@ -1,5 +1,5 @@
-const CACHE = 'concorso-v33';
-const FILES_TO_CACHE = ['/', '/index.html', '/db.json', '/config.json'];
+const CACHE = 'concorso-v33b';
+const FILES_TO_CACHE = ['/', '/index.html', '/db.json', '/config.json', '/manifest.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES_TO_CACHE)).then(() => self.skipWaiting()));
