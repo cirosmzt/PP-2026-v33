@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#1e3a5f" id="themeColor">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" id="pwaManifest">
+<link rel="manifest" href="./manifest.json">
 <style>
 :root{--bg:#fffdf7;--card:#fff;--primary:#1a4a8a;--pl:#e8f0fb;--acc:#e07b00;--ok:#1a7a3a;--okbg:#e6f5ec;--err:#c0392b;--errbg:#fdecea;--txt:#1a1a2e;--mu:#6b7280;--brd:#dde3ed;--sh:0 4px 24px rgba(26,74,138,.10);--r:18px;--header-bg:#1e3a5f;--challenge:#7c3aed;--challenge-light:#ede9fe;}
 body.dark{--bg:#1a1a2e;--card:#2d2d44;--primary:#60a5fa;--pl:#1e3a5f;--acc:#fbbf24;--ok:#4ade80;--okbg:#14532d;--err:#f87171;--errbg:#7f1d1d;--txt:#f3f4f6;--mu:#9ca3af;--brd:#4b5563;--sh:0 4px 24px rgba(0,0,0,.3);--header-bg:#0f172a;--challenge:#a78bfa;--challenge-light:#2e1065;}
@@ -1264,10 +1264,6 @@ async function loadApp() {
     $i('simDesc').textContent = `${simN()} domande · ${simMin()} minuti · Punteggio e revisione errori.`;
     $i('chDesc').textContent = `${chN()} domande · ${chSec()}s per risposta · Punteggio velocità + bonus streak 🔥`;
 
-    // Manifest PWA dinamico
-    const manifest = { name: CFG.nomeApp, short_name: CFG.nomeConcorso.split(' ').slice(-2).join(' '), description: CFG.nomeConcorso, start_url: './index.html', display: 'standalone', background_color: '#f0f4f8', theme_color: '#1e3a5f', icons: [{src:'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f46e.png',sizes:'72x72',type:'image/png'},{src:'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f46e.svg',sizes:'any',type:'image/svg+xml'}] };
-    const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-    const link = $i('pwaManifest'); if(link) link.href = URL.createObjectURL(blob);
 
     // Nascondi loading e mostra home
     $i('loadingScreen').style.display = 'none';
