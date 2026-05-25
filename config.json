@@ -1,0 +1,21 @@
+{
+  "nomeApp": "Studio PP 2026",
+  "nomeConcorso": "Polizia Penitenziaria 2026",
+  "versione": "v33",
+  "simulazione": {
+    "numeroDomande": 80,
+    "minutiDisponibili": 60,
+    "punteggioMinimo": 60
+  },
+  "punteggio": {
+    "rispCorretta": 0.125,
+    "rispErrata": 0,
+    "rispSaltata": 0,
+    "totaleBase": 10,
+    "mostraVoto": true
+  },
+  "sfidaTempo": {
+    "numeroDomande": 20,
+    "secondiPerDomanda": 30
+  }
+}

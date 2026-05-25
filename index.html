@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Studio Concorso</title>
+<meta name="theme-color" content="#1e3a5f" id="themeColor">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" id="pwaManifest">
+<style>
+:root{--bg:#fffdf7;--card:#fff;--primary:#1a4a8a;--pl:#e8f0fb;--acc:#e07b00;--ok:#1a7a3a;--okbg:#e6f5ec;--err:#c0392b;--errbg:#fdecea;--txt:#1a1a2e;--mu:#6b7280;--brd:#dde3ed;--sh:0 4px 24px rgba(26,74,138,.10);--r:18px;--header-bg:#1e3a5f;--challenge:#7c3aed;--challenge-light:#ede9fe;}
+body.dark{--bg:#1a1a2e;--card:#2d2d44;--primary:#60a5fa;--pl:#1e3a5f;--acc:#fbbf24;--ok:#4ade80;--okbg:#14532d;--err:#f87171;--errbg:#7f1d1d;--txt:#f3f4f6;--mu:#9ca3af;--brd:#4b5563;--sh:0 4px 24px rgba(0,0,0,.3);--header-bg:#0f172a;--challenge:#a78bfa;--challenge-light:#2e1065;}
+@font-face{font-family:"OpenDyslexic";src:url("https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/fonts/OpenDyslexic-Regular.otf") format("opentype");font-weight:normal;}
+@font-face{font-family:"OpenDyslexic";src:url("https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/fonts/OpenDyslexic-Bold.otf") format("opentype");font-weight:bold;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:"OpenDyslexic",Georgia,serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding-bottom:50px;transition:background .3s,color .3s;}
+#loadingScreen{position:fixed;top:0;left:0;right:0;bottom:0;background:#1e3a5f;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:99999;color:#fff;}
+#loadingScreen .ld-ico{font-size:4rem;margin-bottom:20px;animation:pulse2 1.2s ease-in-out infinite;}
+#loadingScreen .ld-txt{font-size:1rem;opacity:.9;margin-bottom:8px;}
+#loadingScreen .ld-sub{font-size:.75rem;opacity:.6;}
+#loadingScreen .ld-bar-wrap{width:200px;height:6px;background:rgba(255,255,255,.2);border-radius:99px;margin-top:16px;overflow:hidden;}
+#loadingScreen .ld-bar{height:100%;background:#f9c74f;border-radius:99px;animation:loadprog 1.5s ease-in-out infinite;}
+@keyframes pulse2{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+@keyframes loadprog{0%{width:0%;}70%{width:90%;}100%{width:100%;}}
+.hdr{width:100%;background:var(--header-bg);color:#fff;padding:14px 18px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;transition:background .3s;}
+.hdr-row{width:100%;max-width:640px;display:flex;align-items:center;gap:10px;}
+.hdr-t{font-size:.95rem;font-weight:bold;}
+.hdr-s{font-size:.7rem;opacity:.8;margin-top:2px;}
+.pb-wrap{width:100%;max-width:600px;background:rgba(255,255,255,.2);border-radius:99px;height:9px;overflow:hidden;}
+.pb{height:100%;background:#f9c74f;border-radius:99px;transition:width .4s;}
+.pt{font-size:.72rem;opacity:.9;text-align:center;margin-top:3px;}
+.fc{display:flex;gap:6px;margin-left:auto;}
+.fb2{width:28px;height:28px;border-radius:6px;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:"OpenDyslexic",serif;}
+.dark-toggle{background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.35);border-radius:28px;width:44px;height:28px;cursor:pointer;position:relative;transition:.2s;}
+.dark-toggle span{position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .2s;display:flex;align-items:center;justify-content:center;font-size:12px;}
+body.dark .dark-toggle span{left:18px;}
+.hidden{display:none!important;}
+.home{width:100%;max-width:640px;padding:18px 15px;}
+.home h2{font-size:1.05rem;color:var(--primary);margin-bottom:5px;font-weight:bold;}
+.home p{font-size:.83rem;color:var(--mu);margin-bottom:18px;line-height:1.6;}
+.mcards{display:flex;flex-direction:column;gap:12px;}
+.mcard{background:var(--card);border:2px solid var(--brd);border-radius:var(--r);padding:18px 16px;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:12px;}
+.mcard:hover{border-color:var(--primary);box-shadow:var(--sh);}
+.mcard.tc:hover{border-color:var(--acc);}
+.mcard.ch:hover{border-color:var(--challenge);}
+.mico{font-size:1.8rem;flex-shrink:0;}
+.minfo h3{font-size:.95rem;font-weight:bold;color:var(--txt);margin-bottom:3px;}
+.minfo p{font-size:.78rem;color:var(--mu);line-height:1.5;}
+.leaderboard{background:var(--card);border:2px solid var(--brd);border-radius:var(--r);padding:16px;margin-top:16px;}
+.leaderboard h3{font-size:.9rem;color:var(--primary);margin-bottom:12px;}
+.ld-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--brd);font-size:.78rem;}
+.ld-row:last-child{border-bottom:none;}
+.ld-val{font-weight:bold;color:var(--acc);}
+.sgrid{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
+.sbtn{padding:7px 14px;border-radius:99px;border:2px solid var(--brd);background:var(--card);font-family:"OpenDyslexic",Georgia,serif;font-size:.73rem;cursor:pointer;transition:all .2s;color:var(--mu);}
+.sbtn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.bstart{margin-top:16px;width:100%;padding:14px;border-radius:12px;border:none;font-family:"OpenDyslexic",Georgia,serif;font-size:.95rem;font-weight:bold;cursor:pointer;transition:all .18s;background:var(--primary);color:#fff;}
+.bstart:hover{background:#163d73;}
+.bstart.ta{background:var(--acc);}
+.bstart.ta:hover{background:#b85f00;}
+.bstart.ch{background:var(--challenge);}
+.bstart.ch:hover{background:#6d28d9;}
+.bback{margin-top:10px;width:100%;padding:11px;border-radius:12px;border:2px solid var(--primary);background:var(--card);color:var(--primary);font-family:"OpenDyslexic",serif;font-size:.85rem;font-weight:bold;cursor:pointer;}
+.sbar{width:100%;max-width:640px;display:flex;gap:7px;padding:10px 15px 0;justify-content:center;flex-wrap:wrap;}
+.sp{display:flex;align-items:center;gap:4px;background:var(--card);border:2px solid var(--brd);border-radius:99px;padding:4px 11px;font-size:.7rem;}
+.sp.g{border-color:var(--ok);color:var(--ok);}
+.sp.r{border-color:var(--err);color:var(--err);}
+.sp.b{border-color:var(--primary);color:var(--primary);}
+.tmr{width:100%;max-width:640px;padding:10px 15px 0;}
+.tmr-in{background:var(--card);border:2px solid var(--acc);border-radius:12px;padding:9px 14px;display:flex;align-items:center;gap:10px;}
+.tmr-lbl{font-size:.68rem;color:var(--mu);}
+.tmr-val{font-size:1.1rem;font-weight:bold;color:var(--acc);}
+.tmr-pw{flex:1;background:#f0f0f0;border-radius:99px;height:8px;overflow:hidden;}
+.tmr-p{height:100%;background:var(--acc);border-radius:99px;transition:width 1s linear;}
+.tmr-p.dng{background:var(--err);}
+.ch-hdr{width:100%;max-width:640px;padding:10px 15px 0;}
+.ch-hdr-in{background:var(--card);border:2px solid var(--challenge);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;}
+.ch-info{display:flex;flex-direction:column;min-width:60px;}
+.ch-info-lbl{font-size:.62rem;color:var(--mu);}
+.ch-info-val{font-size:1rem;font-weight:bold;color:var(--challenge);}
+.ch-timer-wrap{flex:1;display:flex;flex-direction:column;gap:4px;}
+.ch-timer-bar-bg{background:#e5e7eb;border-radius:99px;height:12px;overflow:hidden;}
+.ch-timer-bar{height:100%;border-radius:99px;background:#22c55e;transition:width 1s linear,background .3s;}
+.ch-timer-num{text-align:center;font-size:.9rem;font-weight:bold;}
+.ch-timer-num.danger{color:#ef4444;animation:pulse .5s ease-in-out infinite alternate;}
+@keyframes pulse{from{opacity:1;}to{opacity:.4;}}
+.ch-streak-badge{min-width:52px;text-align:center;}
+.ch-streak-val{font-size:1.1rem;font-weight:bold;color:#f97316;}
+.ch-streak-lbl{font-size:.6rem;color:var(--mu);}
+.ch-score-big{font-size:1.4rem;font-weight:bold;color:var(--challenge);}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(-50px) scale(1.3);}}
+.pts-popup{position:fixed;font-size:1.1rem;font-weight:bold;color:#22c55e;pointer-events:none;z-index:9999;animation:floatUp .9s ease-out forwards;}
+.pts-popup.bonus{color:#f97316;}
+.ch-res{width:100%;max-width:640px;padding:12px 15px 0;}
+.ch-res-c{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:24px 20px;border:2px solid var(--challenge);}
+.ch-res-score{font-size:2.8rem;font-weight:bold;color:var(--challenge);text-align:center;margin:10px 0;}
+.ch-record-badge{display:block;background:linear-gradient(135deg,#f59e0b,#ef4444);color:white;border-radius:99px;padding:6px 16px;font-size:.8rem;font-weight:bold;margin:0 auto 14px;text-align:center;width:fit-content;box-shadow:0 2px 10px rgba(239,68,68,.4);}
+.ch-lb{background:var(--challenge-light);border-radius:12px;padding:14px;margin:14px 0;}
+.ch-lb h4{font-size:.85rem;font-weight:bold;color:var(--challenge);margin-bottom:10px;}
+.ch-lb-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(124,58,237,.15);font-size:.78rem;}
+.ch-lb-row:last-child{border-bottom:none;}
+.ch-lb-row.me{background:rgba(124,58,237,.08);margin:0 -6px;padding:7px 6px;border-radius:8px;border-bottom:none;}
+.ch-lb-rank{width:24px;height:24px;border-radius:50%;background:var(--challenge);color:#fff;font-size:.7rem;font-weight:bold;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ch-lb-rank.gold{background:linear-gradient(135deg,#f59e0b,#d97706);}
+.ch-lb-rank.silver{background:linear-gradient(135deg,#9ca3af,#6b7280);}
+.ch-lb-rank.bronze{background:linear-gradient(135deg,#cd7f32,#a0522d);}
+.ch-lb-sc{font-size:1.05rem;font-weight:bold;color:var(--challenge);margin-left:auto;}
+.ch-lb-date{font-size:.65rem;color:var(--mu);}
+.tnav{width:100%;max-width:640px;padding:8px 15px 0;display:flex;flex-wrap:wrap;gap:5px;}
+.tp{width:29px;height:29px;border-radius:7px;border:2px solid var(--brd);background:var(--card);font-size:.62rem;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--mu);}
+.tp.oc{background:var(--ok);border-color:var(--ok);color:#fff;}
+.tp.ow{background:var(--err);border-color:var(--err);color:#fff;}
+.tp.cur{border-color:var(--primary);color:var(--primary);background:var(--pl);}
+.cwrap{width:100%;max-width:640px;padding:12px 15px 0;}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:20px 18px 16px;border:2px solid var(--brd);}
+.badge{display:inline-block;background:var(--pl);color:var(--primary);font-size:.62rem;font-weight:bold;padding:3px 9px;border-radius:99px;margin-bottom:9px;letter-spacing:.4px;text-transform:uppercase;}
+.qnum{font-size:.65rem;color:var(--mu);margin-bottom:3px;}
+.qtxt{font-size:1rem;line-height:1.75;letter-spacing:.3px;margin-bottom:16px;}
+.opts{display:flex;flex-direction:column;gap:8px;}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:11px;border:2px solid var(--brd);background:#fafbfd;cursor:pointer;transition:all .18s;font-family:"OpenDyslexic",Georgia,serif;font-size:.88rem;line-height:1.5;text-align:left;width:100%;}
+.opt:hover:not([disabled]){border-color:var(--primary);background:var(--pl);}
+.opt[disabled]{cursor:default;}
+.olbl{font-weight:bold;font-size:.78rem;min-width:21px;height:21px;border-radius:6px;background:var(--pl);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.opt.oc{border-color:var(--ok);background:var(--okbg);}
+.opt.oc .olbl{background:var(--ok);color:#fff;}
+.opt.ow{border-color:var(--err);background:var(--errbg);}
+.opt.ow .olbl{background:var(--err);color:#fff;}
+.anchor{font-weight:bold;background:#fff3cd;color:#7d4e00;padding:1px 4px;border-radius:4px;}
+.prog-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.prog-card{background:var(--card);border:2px solid var(--brd);border-radius:12px;padding:14px;text-align:center}
+.prog-card .pv{font-size:1.6rem;font-weight:bold;color:var(--primary)}
+.prog-card .pl{font-size:.68rem;color:var(--mu);margin-top:3px}
+.prog-card.streak .pv{color:#f97316}
+.prog-card.ok-card .pv{color:var(--ok)}
+.prog-sec{background:var(--card);border:2px solid var(--brd);border-radius:12px;padding:14px;margin-bottom:10px}
+.prog-sec h4{font-size:.82rem;color:var(--primary);font-weight:bold;margin-bottom:10px;margin-top:0}
+.pbar-wrap{background:#f0f0f0;border-radius:99px;height:10px;overflow:hidden;margin-bottom:3px}
+.pbar-fill{height:100%;border-radius:99px;background:var(--ok);transition:width .5s}
+.pbar-fill.mid{background:var(--acc)}
+.pbar-fill.low{background:var(--err)}
+.pbar-lbl{display:flex;justify-content:space-between;font-size:.68rem;color:var(--mu);margin-bottom:7px}
+.sim-row{background:var(--bg);border:1px solid var(--brd);border-radius:8px;padding:9px 12px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center}
+.sim-date{font-size:.7rem;color:var(--mu)}
+.sim-sc{font-size:1rem;font-weight:bold}
+.sim-sc.pass{color:var(--ok)}.sim-sc.fail{color:var(--err)}
+.ripassa{background:var(--errbg);border:1.5px solid var(--err);border-radius:8px;padding:9px 12px;margin-bottom:7px;font-size:.78rem;line-height:1.5}
+.ripassa .rans{color:var(--ok);font-weight:bold;margin-top:3px;font-size:.75rem}
+.ripassa .ranch{font-size:.7rem;background:#fff8e1;color:#5a3e00;padding:2px 7px;border-radius:5px;margin-top:3px;display:inline-block}
+.ord-row{display:flex;gap:8px;margin-top:12px;margin-bottom:4px}
+.ord-row .sbtn{flex:1;padding:9px 4px}
+.rip-sec{background:var(--card);border:2px solid var(--brd);border-radius:12px;padding:14px;margin-bottom:10px}
+.rip-sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.rip-sec-hdr h4{font-size:.88rem;font-weight:bold;color:var(--primary);margin:0}
+.rip-count{background:#fee2e2;color:#dc2626;border-radius:99px;font-size:.7rem;font-weight:bold;padding:3px 10px}
+.rip-q{background:#fff8f8;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 12px;margin-bottom:7px;font-size:.8rem;line-height:1.5;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.rip-q .rq-txt{flex:1}
+.rip-q .rq-streak{font-size:.7rem;background:#dcfce7;color:#166534;border-radius:6px;padding:2px 7px;white-space:nowrap;margin-top:2px}
+.rip-start{width:100%;padding:10px;border-radius:8px;border:none;font-size:.85rem;font-weight:bold;cursor:pointer;margin-top:6px}
+.rip-start.all{background:#dc2626;color:white}
+.rip-start.sec{background:#fee2e2;color:#dc2626;border:2px solid #dc2626}
+.empty-ripasso{text-align:center;padding:30px;color:var(--ok);font-size:.9rem}
+.cmplt{width:100%;max-width:640px;padding:12px 15px 0;}
+.cmplt-c{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:24px 20px;border:2px solid var(--brd);text-align:center;}
+.cmplt-c h2{font-size:1.1rem;color:var(--primary);margin-bottom:9px;}
+.cmplt-c p{color:var(--mu);margin-bottom:14px;line-height:1.7;font-size:.85rem;}
+.res{width:100%;max-width:640px;padding:12px 15px 0;}
+.res-c{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:24px 20px;border:2px solid var(--brd);text-align:center;}
+.res-ico{font-size:2.8rem;margin-bottom:9px;}
+.res-ttl{font-size:1.2rem;font-weight:bold;color:var(--primary);margin-bottom:6px;}
+.res-sc{font-size:2.3rem;font-weight:bold;margin:12px 0;}
+.res-sc.pass{color:var(--ok);}
+.res-sc.fail{color:var(--err);}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0;}
+.ritem{background:#f8f9fa;border-radius:9px;padding:11px;text-align:center;}
+.ritem .rv{font-size:1.3rem;font-weight:bold;}
+.ritem .rl{font-size:.68rem;color:var(--mu);margin-top:2px;}
+.ritem.g .rv{color:var(--ok);}
+.ritem.r .rv{color:var(--err);}
+.rvlist{margin-top:18px;text-align:left;}
+.rvlist h3{font-size:.88rem;color:var(--primary);font-weight:bold;margin-bottom:9px;}
+.rvi{background:var(--errbg);border:2px solid var(--err);border-radius:9px;padding:11px 13px;margin-bottom:9px;}
+.rvi .rq{font-size:.8rem;margin-bottom:4px;line-height:1.5;}
+.rvi .ra{font-size:.8rem;color:var(--ok);font-weight:bold;}
+.rvi .rk{font-size:.75rem;color:#5a3e00;background:#fff8e1;border-radius:5px;padding:3px 7px;margin-top:4px;display:inline-block;}
+.fb{margin-top:12px;padding:11px 14px;border-radius:11px;font-size:.85rem;line-height:1.6;}
+.fb.ok{background:var(--okbg);color:var(--ok);border:2px solid var(--ok);}
+.fb.er{background:var(--errbg);color:var(--err);border:2px solid var(--err);}
+.fba{margin-top:7px;font-size:.82rem;color:#5a3e00;background:#fff8e1;border-radius:7px;padding:6px 10px;border-left:4px solid #f9c74f;}
+.brow{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;}
+.btn{flex:1;min-width:110px;padding:11px 9px;border-radius:11px;border:none;font-family:"OpenDyslexic",Georgia,serif;font-size:.83rem;font-weight:bold;cursor:pointer;transition:all .18s;}
+.bn{background:var(--primary);color:#fff;}
+.bn:hover{background:#163d73;}
+.bk{background:var(--ok);color:#fff;}
+.bk:hover{background:#145c2b;}
+.bd{background:var(--err);color:#fff;}
+.bd:hover{background:#a02e22;}
+.bs{background:var(--card);color:var(--primary);border:2px solid var(--primary);}
+.bo{background:var(--acc);color:#fff;}
+.bo:hover{background:#b85f00;}
+.bch{background:var(--challenge);color:#fff;}
+.bch:hover{background:#6d28d9;}
+/* CONFIG INFO BADGE */
+.cfg-badge{background:var(--pl);border:2px solid var(--primary);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:.78rem;line-height:1.8;color:var(--txt);}
+.cfg-badge strong{color:var(--primary);}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loadingScreen">
+  <div class="ld-ico">🎓</div>
+  <div class="ld-txt" id="ldTxt">Caricamento in corso…</div>
+  <div class="ld-sub" id="ldSub">Lettura configurazione e banca dati</div>
+  <div class="ld-bar-wrap"><div class="ld-bar"></div></div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-row">
+    <div style="flex:1">
+      <div class="hdr-t" id="hdrTitle">🎓 Studio Concorso</div>
+      <div class="hdr-s" id="hdrSub">Caricamento…</div>
+    </div>
+    <div class="fc">
+      <button class="fb2" onclick="chFS(-1)">A-</button>
+      <button class="fb2" onclick="chFS(1)">A+</button>
+      <div class="dark-toggle" onclick="toggleDarkMode()"><span>🌙</span></div>
+    </div>
+  </div>
+  <div style="width:100%;max-width:600px;">
+    <div class="pb-wrap"><div class="pb" id="pb" style="width:0%"></div></div>
+    <div class="pt" id="pt">Caricamento…</div>
+  </div>
+</div>
+
+<!-- PWA BAR -->
+<div id="pwaBar" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9998;background:#1e3a5f;color:white;padding:12px 16px;align-items:center;gap:10px;box-shadow:0 -2px 12px rgba(0,0,0,.3)">
+  <div style="flex:1;font-size:.8rem;line-height:1.4">📲 <strong>Installa l'app</strong> — aggiungila al dispositivo!</div>
+  <button onclick="installPWA()" style="background:white;color:#1e3a5f;border:none;border-radius:8px;padding:8px 14px;font-size:.8rem;font-weight:bold;cursor:pointer;white-space:nowrap">⊕ Installa</button>
+  <button onclick="hidePWABar()" style="background:transparent;color:rgba(255,255,255,.7);border:none;font-size:1.2rem;cursor:pointer;padding:4px 8px">✕</button>
+</div>
+
+<!-- HOME -->
+<div class="home hidden" id="sHome">
+  <h2>Come vuoi studiare?</h2>
+  <p>La <strong>parola chiave</strong> della risposta corretta viene sempre evidenziata.</p>
+  <div class="mcards">
+    <div class="mcard" onclick="goStudySetup()">
+      <div class="mico">📚</div>
+      <div class="minfo"><h3>Modalità Studio</h3><p>Una domanda alla volta. Scegli la sezione, segna se la sapevi o no, ripassa gli errori.</p></div>
+    </div>
+    <div class="mcard" onclick="startExamMode()" style="border-color:#111827">
+      <div class="mico">🧪</div>
+      <div class="minfo"><h3>Modalità Esame Reale</h3><p>Nessun aiuto · Nessun feedback immediato · Scopri il voto solo alla fine.</p></div>
+    </div>
+    <div class="mcard tc" onclick="goTestSetup()">
+      <div class="mico">⏱️</div>
+      <div class="minfo"><h3>Simulazione Concorso</h3><p id="simDesc">80 domande casuali · 60 minuti · Punteggio finale e revisione errori.</p></div>
+    </div>
+    <div class="mcard ch" onclick="goChallengeSetup()" style="border-color:#7c3aed;">
+      <div class="mico">⚡</div>
+      <div class="minfo"><h3>Sfida a Tempo <span id="chRecordBadge" style="display:none;background:linear-gradient(135deg,#f59e0b,#ef4444);color:white;border-radius:99px;font-size:.62rem;padding:2px 7px;margin-left:4px;vertical-align:middle"></span></h3><p id="chDesc">20 domande · 30 secondi per risposta · Punteggio velocità + bonus streak 🔥</p></div>
+    </div>
+    <div class="mcard" onclick="goRipasso()" style="border-color:#dc2626;">
+      <div class="mico">🔁</div>
+      <div class="minfo"><h3>Da ripassare <span id="ripassoBadge" style="display:none;background:#dc2626;color:white;border-radius:99px;font-size:.7rem;padding:2px 8px;margin-left:6px;vertical-align:middle"></span></h3><p>Le domande che hai sbagliato, divise per materia. Si tolgono quando le impari.</p></div>
+    </div>
+    <div class="mcard" onclick="showProgress()" style="border-color:#7c3aed;">
+      <div class="mico">📊</div>
+      <div class="minfo"><h3>I miei progressi</h3><p>Statistiche per sezione · Storico simulazioni · Streak 🔥</p></div>
+    </div>
+  </div>
+  <div style="margin-top:16px;text-align:center">
+    <button onclick="showExitAppConfirm()" style="background:none;border:none;color:var(--mu);font-size:.78rem;cursor:pointer;text-decoration:underline;font-family:inherit">⏏️ Esci dall'app</button>
+  </div>
+  <div id="exitAppDialog" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:9999;align-items:center;justify-content:center;padding:20px">
+    <div style="background:var(--card);border-radius:16px;padding:24px;max-width:360px;width:100%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+      <div style="font-size:2rem;margin-bottom:12px">⏏️</div>
+      <h3 style="color:var(--primary);margin-bottom:8px">Vuoi uscire dall'app?</h3>
+      <p style="font-size:.82rem;color:var(--mu);margin-bottom:16px;line-height:1.6">Prima di uscire ti consigliamo di <strong>salvare i progressi</strong>.</p>
+      <button onclick="exitAppSaveFirst()" class="btn" style="width:100%;background:#1e3a5f;color:white;border:none;padding:12px;margin-bottom:8px;font-size:.9rem">💾 Salva progressi e poi esci</button>
+      <button onclick="exitAppForce()" class="btn" style="width:100%;background:#fee2e2;color:var(--err);border:2px solid var(--err);padding:10px;margin-bottom:8px;font-size:.82rem">⏏️ Esci senza salvare</button>
+      <button onclick="cancelExitApp()" class="btn" style="width:100%;background:#f0f4f8;color:var(--primary);border:2px solid var(--brd);padding:10px;font-size:.82rem">← Annulla</button>
+    </div>
+  </div>
+</div>
+
+<!-- STUDY SETUP -->
+<div class="home hidden" id="sStudySetup">
+  <h2>📚 Scegli la sezione</h2>
+  <div class="sgrid" id="sgrid"></div>
+  <div style="font-size:.8rem;color:var(--primary);font-weight:bold;margin-top:14px;margin-bottom:6px">Ordine domande:</div>
+  <div class="ord-row">
+    <button id="btnOrdRand" class="sbtn active" onclick="setOrder('random')">🔀 Casuale</button>
+    <button id="btnOrdSeq" class="sbtn" onclick="setOrder('sequential')">🔢 Originale</button>
+  </div>
+  <button class="bstart" onclick="startStudy()">▶ Inizia studio</button>
+  <button class="bback" onclick="goHome()">← Indietro</button>
+</div>
+
+<!-- TEST SETUP -->
+<div class="home hidden" id="sTestSetup">
+  <h2>⏱️ Simulazione Concorso</h2>
+  <div class="cfg-badge" id="testSetupInfo"></div>
+  <button class="bstart ta" onclick="startTest()">▶ Inizia simulazione</button>
+  <button class="bback" onclick="goHome()">← Indietro</button>
+</div>
+
+<!-- CHALLENGE SETUP -->
+<div class="home hidden" id="sChallengeSetup">
+  <h2>⚡ Sfida a Tempo</h2>
+  <div class="cfg-badge" id="challengeSetupInfo"></div>
+  <div id="chSetupLb" style="margin-bottom:16px"></div>
+  <button class="bstart ch" onclick="startChallenge()">⚡ Inizia sfida!</button>
+  <button class="bback" onclick="goHome()">← Indietro</button>
+</div>
+
+<!-- STUDY STATS -->
+<div class="sbar hidden" id="sStudyStats">
+  <div class="sp g">✅ <span id="stKnew">0</span> sapevo</div>
+  <div class="sp r">❌ <span id="stDidnt">0</span> non sapevo</div>
+  <div class="sp b">📋 <span id="stLeft">0</span> rimaste</div>
+  <div class="sp" style="border-color:var(--err);color:var(--err);">
+    <span id="btnStudyExitAsk" onclick="showStudyExitConfirm()" style="cursor:pointer;">✕ Esci</span>
+    <span id="studyExitConfirm" style="display:none;align-items:center;gap:4px;">
+      <span style="font-size:.65rem;">Sicuro?</span>
+      <button onclick="doStudyExit()" style="background:var(--err);color:#fff;border:none;border-radius:5px;padding:3px 7px;font-family:'OpenDyslexic',serif;font-size:.68rem;font-weight:bold;cursor:pointer;">Sì</button>
+      <button onclick="cancelStudyExit()" style="background:var(--card);border:2px solid var(--mu);color:var(--mu);border-radius:5px;padding:3px 7px;font-family:'OpenDyslexic',serif;font-size:.68rem;font-weight:bold;cursor:pointer;">No</button>
+    </span>
+  </div>
+</div>
+
+<!-- TIMER -->
+<div class="tmr hidden" id="sTimer">
+  <div class="tmr-in">
+    <div><div class="tmr-lbl">Tempo rimasto</div><div class="tmr-val" id="tVal">60:00</div></div>
+    <div class="tmr-pw"><div class="tmr-p" id="tPrg" style="width:100%"></div></div>
+    <div style="text-align:right"><div class="tmr-lbl">Domanda</div><div class="tmr-val" id="tQN" style="font-size:.9rem">1/80</div></div>
+    <div style="flex-shrink:0;display:flex;align-items:center;gap:5px;">
+      <button id="btnExitAsk" onclick="showExitConfirm()" style="background:var(--card);border:2px solid var(--err);color:var(--err);border-radius:8px;padding:5px 10px;font-family:'OpenDyslexic',serif;font-size:.75rem;font-weight:bold;cursor:pointer;">✕ Esci</button>
+      <span id="exitConfirm" style="display:none;align-items:center;gap:4px;">
+        <span style="font-size:.68rem;">Sicuro?</span>
+        <button onclick="doExit()" style="background:var(--err);color:#fff;border:none;border-radius:6px;padding:4px 8px;font-family:'OpenDyslexic',serif;font-size:.7rem;font-weight:bold;cursor:pointer;">Sì</button>
+        <button onclick="cancelExit()" style="background:var(--card);border:2px solid var(--mu);color:var(--mu);border-radius:6px;padding:4px 8px;font-family:'OpenDyslexic',serif;font-size:.7rem;font-weight:bold;cursor:pointer;">No</button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- CHALLENGE HEADER -->
+<div class="ch-hdr hidden" id="sChallengeHdr">
+  <div class="ch-hdr-in">
+    <div class="ch-info"><div class="ch-info-lbl">Domanda</div><div class="ch-info-val" id="chQNum">1/20</div></div>
+    <div class="ch-timer-wrap">
+      <div class="ch-timer-bar-bg"><div class="ch-timer-bar" id="chTimerBar" style="width:100%"></div></div>
+      <div class="ch-timer-num" id="chTimerVal">30s</div>
+    </div>
+    <div class="ch-streak-badge"><div class="ch-streak-val" id="chStreakDisplay">—</div><div class="ch-streak-lbl">streak</div></div>
+    <div class="ch-info" style="text-align:right"><div class="ch-info-lbl">Punti</div><div class="ch-score-big" id="chScoreDisplay">0</div></div>
+    <button onclick="showChExitConfirm()" style="background:var(--card);border:2px solid var(--err);color:var(--err);border-radius:8px;padding:5px 9px;font-family:'OpenDyslexic',serif;font-size:.72rem;font-weight:bold;cursor:pointer;flex-shrink:0;">✕</button>
+  </div>
+  <div id="chExitConfirm" style="display:none;margin-top:6px;background:#fee2e2;border:2px solid var(--err);border-radius:10px;padding:8px 12px;align-items:center;gap:8px;font-size:.78rem;color:var(--err);">
+    <span style="flex:1">Abbandonare la sfida?</span>
+    <button onclick="doChExit()" style="background:var(--err);color:#fff;border:none;border-radius:6px;padding:5px 11px;font-family:'OpenDyslexic',serif;font-size:.75rem;font-weight:bold;cursor:pointer;">Sì</button>
+    <button onclick="cancelChExit()" style="background:var(--card);border:2px solid var(--mu);color:var(--mu);border-radius:6px;padding:5px 11px;font-family:'OpenDyslexic',serif;font-size:.75rem;font-weight:bold;cursor:pointer;">No</button>
+  </div>
+</div>
+
+<!-- CHALLENGE CARD -->
+<div class="cwrap hidden" id="sChallengeCard">
+  <div class="card"><div id="chCardHTML"></div></div>
+</div>
+
+<!-- TEST NAV -->
+<div class="tnav hidden" id="sNav"></div>
+
+<!-- CARD -->
+<div class="cwrap hidden" id="sCard">
+  <div class="card"><div id="cardHTML"></div></div>
+</div>
+
+<!-- STUDY DONE -->
+<div class="cmplt hidden" id="sDone">
+  <div class="cmplt-c">
+    <div style="font-size:2.2rem">🏁</div>
+    <h2>Sezione completata!</h2>
+    <p id="doneStats"></p>
+    <div style="display:flex;gap:9px;flex-wrap:wrap;">
+      <button class="btn bn" style="flex:1" onclick="restartStudy()">🔄 Ripeti</button>
+      <button class="btn bo" style="flex:1" id="btnRevErr" onclick="reviewErrors()">📖 Rivedi errori</button>
+    </div>
+    <br>
+    <button class="btn bs" style="width:100%" onclick="goHome()">🏠 Menu principale</button>
+  </div>
+</div>
+
+<!-- TEST RESULTS -->
+<div class="res hidden" id="sResults">
+  <div class="res-c">
+    <div class="res-ico" id="rIco">🏆</div>
+    <div class="res-ttl" id="rTtl">Simulazione completata!</div>
+    <div class="res-sc" id="rSc"></div>
+    <div id="rVoto" style="text-align:center;margin:6px 0 10px;font-size:.9rem;color:var(--mu)"></div>
+    <div class="res-grid">
+      <div class="ritem g"><div class="rv" id="rOk">0</div><div class="rl">✅ Corrette</div></div>
+      <div class="ritem r"><div class="rv" id="rErr">0</div><div class="rl">❌ Sbagliate</div></div>
+      <div class="ritem"><div class="rv" id="rT">—</div><div class="rl">⏱ Tempo</div></div>
+      <div class="ritem"><div class="rv" id="rSkip">0</div><div class="rl">⏭ Saltate</div></div>
+    </div>
+    <div id="rPenalita" style="display:none;background:#fff8e1;border:2px solid #f59e0b;border-radius:10px;padding:10px;margin:8px 0;font-size:.82rem;text-align:center;color:#92400e;"></div>
+    <div class="brow">
+      <button class="btn bo" onclick="showReview()">📖 Rivedi errori</button>
+      <button class="btn bn" onclick="startTest()">🔄 Nuovo test</button>
+    </div>
+    <br>
+    <button class="btn bs" style="width:100%" onclick="goHome()">🏠 Menu principale</button>
+    <div class="rvlist hidden" id="rvList"></div>
+  </div>
+</div>
+
+<!-- CHALLENGE RESULTS -->
+<div class="ch-res hidden" id="sChallengeResults">
+  <div class="ch-res-c">
+    <div id="chResIco" style="font-size:2.8rem;text-align:center;margin-bottom:6px">⚡</div>
+    <div id="chResTtl" style="font-size:1.15rem;font-weight:bold;color:var(--challenge);text-align:center;margin-bottom:6px">Sfida completata!</div>
+    <div id="chRecordDiv" style="display:none;text-align:center;margin-bottom:8px">
+      <span class="ch-record-badge" id="chRecordMsg">🏆 NUOVO RECORD!</span>
+    </div>
+    <div class="ch-res-score" id="chResScore">0</div>
+    <div style="text-align:center;font-size:.75rem;color:var(--mu);margin-bottom:14px">punti totali</div>
+    <div class="res-grid">
+      <div class="ritem g"><div class="rv" id="chResOk">0</div><div class="rl">✅ Corrette</div></div>
+      <div class="ritem r"><div class="rv" id="chResErr">0</div><div class="rl">❌ Sbagliate</div></div>
+      <div class="ritem"><div class="rv" id="chResBest">—</div><div class="rl">⚡ Più veloce</div></div>
+      <div class="ritem"><div class="rv" id="chResMaxStreak">0</div><div class="rl">🔥 Streak max</div></div>
+    </div>
+    <div class="ch-lb" id="chLeaderboard"></div>
+    <div class="brow">
+      <button class="btn bch" onclick="startChallenge()">⚡ Riprova</button>
+      <button class="btn bn" onclick="goChallengeSetup()">🏆 Classifica</button>
+    </div>
+    <br>
+    <button class="btn bs" style="width:100%" onclick="goHome()">🏠 Menu principale</button>
+  </div>
+</div>
+
+<!-- RIPASSO -->
+<div class="home hidden" id="sRipasso">
+  <h2>🔁 Da ripassare</h2>
+  <p style="font-size:.8rem;color:var(--mu);margin-bottom:14px">Le domande che hai sbagliato. Quando rispondi correttamente <strong>3 volte di fila</strong> vengono rimosse.</p>
+  <div id="ripassoSections"></div>
+  <button class="btn bs" style="width:100%;padding:12px;margin-top:8px" onclick="goHome()">← Menu principale</button>
+</div>
+
+<!-- RIPASSO STUDY -->
+<div class="home hidden" id="sRipassoStudy">
+  <div class="sbar" style="display:flex">
+    <div class="sp g">✅ <span id="rsKnew">0</span> imparate</div>
+    <div class="sp r">🔁 <span id="rsLeft">0</span> rimaste</div>
+    <div class="sp b" style="font-size:.72rem" id="rsSection"></div>
+    <div class="sp" style="border-color:var(--err);color:var(--err);">
+      <span id="btnRpExitAsk" onclick="showRpExitConfirm()" style="cursor:pointer;">✕ Esci</span>
+      <span id="rpExitConfirm" style="display:none;align-items:center;gap:4px;">
+        <span style="font-size:.65rem;">Sicuro?</span>
+        <button onclick="doRpExit()" style="background:var(--err);color:#fff;border:none;border-radius:5px;padding:3px 7px;font-family:'OpenDyslexic',serif;font-size:.68rem;font-weight:bold;cursor:pointer;">Sì</button>
+        <button onclick="cancelRpExit()" style="background:var(--card);border:2px solid var(--mu);color:var(--mu);border-radius:5px;padding:3px 7px;font-family:'OpenDyslexic',serif;font-size:.68rem;font-weight:bold;cursor:pointer;">No</button>
+      </span>
+    </div>
+  </div>
+  <div class="cwrap">
+    <div class="card"><div id="ripassoCardHTML"></div></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="home hidden" id="sProgress">
+  <h2>📊 I miei progressi</h2>
+  <div id="progContent"></div>
+  <br>
+  <button class="btn bs" style="width:100%;padding:12px;margin-bottom:16px" onclick="goHome()">← Menu principale</button>
+  <div style="text-align:center;margin-top:8px">
+    <button id="resetAsk" onclick="showResetConfirm()" style="background:none;border:none;color:#aaa;font-size:.72rem;cursor:pointer;text-decoration:underline;font-family:inherit">🗑️ Azzera tutti i progressi</button>
+  </div>
+  <div id="resetConfirm" style="display:none;background:#fee2e2;border:2px solid var(--err);border-radius:12px;padding:14px;margin-top:8px;text-align:center">
+    <div style="font-size:.85rem;font-weight:bold;color:var(--err);margin-bottom:8px">⚠️ Sei sicuro di voler azzerare?</div>
+    <div style="font-size:.78rem;color:var(--mu);margin-bottom:12px">Questa operazione elimina tutti i tuoi progressi.</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="showResetSaveFirst()" class="btn" style="flex:1;background:var(--err);color:white;border:none;padding:10px;font-size:.82rem">Sì, voglio azzerare</button>
+      <button onclick="cancelReset()" class="btn" style="flex:1;background:var(--card);color:var(--err);border:2px solid var(--err);padding:10px;font-size:.82rem">Annulla</button>
+    </div>
+  </div>
+  <div id="resetSaveFirst" style="display:none;background:#fff8e1;border:2px solid #f59e0b;border-radius:12px;padding:14px;margin-top:8px;text-align:center">
+    <div style="font-size:.85rem;font-weight:bold;color:#92400e;margin-bottom:8px">💾 Salva prima i progressi?</div>
+    <button onclick="resetSaveAndClear()" class="btn" style="width:100%;background:#1e3a5f;color:white;border:none;padding:10px;margin-bottom:8px;font-size:.82rem">💾 Scarica backup e poi azzera</button>
+    <button onclick="doResetProgress()" class="btn" style="width:100%;background:#fee2e2;color:var(--err);border:2px solid var(--err);padding:10px;font-size:.82rem">🗑️ Azzera senza salvare</button>
+    <button onclick="cancelReset()" class="btn" style="width:100%;background:#f0f4f8;color:var(--primary);border:2px solid var(--brd);padding:10px;margin-top:4px;font-size:.82rem">← Annulla</button>
+  </div>
+</div>
+
+<script>
+// ===== DATI GLOBALI =====
+let ALL = [];
+let SECS = [];
+let CFG = null; // config.json caricato
+
+// ===== LOCALSTORAGE =====
+const PFX='pp26_';
+function storeSave(k,v){ try{ localStorage.setItem(PFX+k,JSON.stringify(v)); }catch(e){} }
+function storeLoad(k,def){ try{ const v=localStorage.getItem(PFX+k); return v!=null?JSON.parse(v):def; }catch(e){ return def; } }
+
+// ===== HELPERS CONFIG =====
+function simN(){ return CFG.simulazione.numeroDomande; }
+function simMin(){ return CFG.simulazione.minutiDisponibili; }
+function simSec(){ return simMin()*60; }
+function simPass(){ return CFG.simulazione.punteggioMinimo; }
+function ptCorr(){ return CFG.punteggio.rispCorretta; }
+function ptErr(){ return CFG.punteggio.rispErrata; }
+function ptSalt(){ return CFG.punteggio.rispSaltata; }
+function ptBase(){ return CFG.punteggio.totaleBase; }
+function chN(){ return CFG.sfidaTempo.numeroDomande; }
+function chSec(){ return CFG.sfidaTempo.secondiPerDomanda; }
+
+function calcolaPunteggio(ok, err, skip){
+  return ok * ptCorr() + err * ptErr() + skip * ptSalt();
+}
+function calcolaPerc(ok, err, skip){
+  const tot = simN();
+  if(ptBase()===10 && ptCorr()===0.125){
+    return Math.round(ok/tot*100);
+  }
+  // Punteggio in punti assoluti
+  const pt = calcolaPunteggio(ok,err,skip);
+  const ptMax = tot * ptCorr();
+  return ptMax>0 ? Math.round(pt/ptMax*100) : 0;
+}
+
+// ===== PROGRESS =====
+function getStats(){ return storeLoad('stats',{}); }
+function getWeak(){ return storeLoad('weak',{}); }
+function getSims(){ return storeLoad('sims',[]); }
+function getStreak(){ return storeLoad('streak',{last:'',days:0}); }
+function todayStr(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function updateStreak(){
+  const s=getStreak(), t=todayStr();
+  if(s.last===t) return;
+  const yd=new Date(); yd.setDate(yd.getDate()-1);
+  const y=yd.getFullYear()+'-'+String(yd.getMonth()+1).padStart(2,'0')+'-'+String(yd.getDate()).padStart(2,'0');
+  s.days = s.last===y ? s.days+1 : 1;
+  s.last=t; storeSave('streak',s);
+}
+function recordAnswer(qIdx, ok){
+  const sec=ALL[qIdx].s;
+  const stats=getStats();
+  if(!stats[sec]) stats[sec]={asked:0,correct:0};
+  stats[sec].asked++; if(ok) stats[sec].correct++;
+  storeSave('stats',stats);
+  const weak=getWeak(), key=String(qIdx);
+  if(!ok){
+    if(!weak[key]) weak[key]={wrong:0,last:0,streak:0};
+    weak[key].wrong++; weak[key].last=Date.now(); weak[key].streak=0;
+    storeSave('weak',weak);
+  } else {
+    if(weak[key]){
+      weak[key].streak=(weak[key].streak||0)+1;
+      if(weak[key].streak>=3){ delete weak[key]; }
+      storeSave('weak',weak);
+    }
+  }
+}
+function recordRipasso(qIdx, ok){
+  const weak=getWeak(), key=String(qIdx);
+  if(!ok){
+    if(!weak[key]) weak[key]={wrong:0,last:0,streak:0};
+    weak[key].wrong++; weak[key].last=Date.now(); weak[key].streak=0;
+    storeSave('weak',weak);
+  } else {
+    if(weak[key]){
+      weak[key].streak=(weak[key].streak||0)+1;
+      if(weak[key].streak>=3){ delete weak[key]; }
+      storeSave('weak',weak);
+    }
+  }
+}
+function recordSim(ok,err,skip,elapsed){
+  const sims=getSims();
+  const punteggio=calcolaPunteggio(ok,err,skip);
+  const perc=calcolaPerc(ok,err,skip);
+  sims.unshift({date:todayStr(),score:perc,ok,err,skip,punteggio,elapsed});
+  if(sims.length>20) sims.pop();
+  storeSave('sims',sims);
+}
+
+// ===== CHALLENGE =====
+function getChallengeScores(){ return storeLoad('ch_scores',[]); }
+function saveChallengeScore(score, correct, maxStreak){
+  const scores=getChallengeScores();
+  const now=new Date();
+  const entry={score,correct,maxStreak,date:todayStr(),time:now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})};
+  scores.push(entry); scores.sort((a,b)=>b.score-a.score);
+  const top5=scores.slice(0,5); storeSave('ch_scores',top5);
+  const idx=top5.findIndex(s=>s.score===entry.score&&s.date===entry.date&&s.time===entry.time);
+  return idx>=0?idx+1:null;
+}
+function getBestChallengeScore(){ const s=getChallengeScores(); return s.length?s[0].score:0; }
+function renderChallengeLeaderboard(container, highlightScore){
+  const scores=getChallengeScores();
+  if(!scores.length){
+    container.innerHTML='<div class="ch-lb"><h4>🏆 La tua classifica personale</h4><div style="text-align:center;color:var(--mu);font-size:.8rem;padding:10px">Nessuna sfida ancora. Gioca ora!</div></div>';
+    return;
+  }
+  const re=['🥇','🥈','🥉','4️⃣','5️⃣'], rc=['gold','silver','bronze','',''];
+  let h='<div class="ch-lb"><h4>🏆 Top 5 punteggi personali</h4>';
+  scores.forEach((s,i)=>{
+    const isMe=highlightScore!=null&&s.score===highlightScore&&i===0;
+    h+=`<div class="ch-lb-row${isMe?' me':''}"><div class="ch-lb-rank ${rc[i]}">${re[i]}</div><div style="flex:1"><div style="font-weight:bold;font-size:.8rem">${s.score} pt</div><div class="ch-lb-date">${s.date} ${s.time} · ✅ ${s.correct}/${chN()} · 🔥 ${s.maxStreak}</div></div><div class="ch-lb-sc">${s.score}</div></div>`;
+  });
+  h+='</div>'; container.innerHTML=h;
+}
+function updateChRecordBadge(){
+  const best=getBestChallengeScore(), badge=$i('chRecordBadge');
+  if(!badge)return;
+  if(best>0){badge.textContent='Record: '+best+' pt';badge.style.display='inline';}
+  else badge.style.display='none';
+}
+
+// ===== SCREENS =====
+const SCREENS=['sHome','sStudySetup','sTestSetup','sChallengeSetup','sStudyStats','sTimer',
+  'sChallengeHdr','sChallengeCard','sNav','sCard','sDone','sResults','sChallengeResults',
+  'sProgress','sRipasso','sRipassoStudy'];
+function show(...ids){
+  SCREENS.forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
+  ids.forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.remove('hidden'); });
+}
+
+// ===== UTILS =====
+function esc(t){ return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmt(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function shuf(a){ const r=[...a]; for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];} return r; }
+function $i(id){ return document.getElementById(id); }
+function setPB(pct,txt){ $i('pb').style.width=pct+'%'; $i('pt').textContent=txt; }
+
+// ===== ANCHOR =====
+function anchor(correct,allOpts){
+  if(!correct) return correct;
+  const STOP=new Set(['il','lo','la','i','gli','le','un','una','uno','del','dello','della','dei','degli','delle','al','allo','alla','ai','agli','alle','dal','dalla','nei','nel','nella','sul','sulla','di','a','da','in','con','su','per','tra','fra','che','e','è','non','si','ma','se','o','ed','ad','sono','era','fu','questo','questa','questi','queste','sulle','sui','sugli','dalle','dagli','quale','quali','chi','cosa','come','quando','dove','perché','viene','venne','stato','stata','stati','essere','avere','fare','anche','più','meno','ogni','tutti','tutte','molto','poco','tanto','altro','altra','altri','altre','ciò','cioè','infatti','dunque','perciò','quindi','allora','mentre','affinché','sicché']);
+  const words=correct.toLowerCase().replace(/[():;,\.!?""''«»]/g,'').split(/\s+/).filter(w=>w.length>=2&&!STOP.has(w));
+  const lw=words.filter(w=>w.length>4);
+  if(lw.length) return lw.sort((a,b)=>b.length-a.length)[0];
+  return words.sort((a,b)=>b.length-a.length)[0]||words[0]||correct;
+}
+
+// ===== SPIEGAZIONI =====
+const EXPLANATIONS={"lago":"🏞️ Ricorda i laghi italiani: Garda (più grande), Maggiore, Como.","capitale":"🏛️ Le capitali vanno memorizzate per associazione geografica.","fiume":"🌊 Il Po è il fiume più lungo d'Italia (652 km).","mare":"🌊 I mari italiani: Ligure, Tirreno, Adriatico, Ionio, Mediterraneo.","monte":"⛰️ Il Monte Bianco (4808 m) è la vetta più alta d'Italia.","region":"🗺️ L'Italia ha 20 regioni, di cui 5 a statuto speciale.","verbo":"✍️ I verbi irregolari vanno ripetuti ad alta voce.","lingu":"📖 La lingua italiana deriva dal latino volgare.","stori":"📜 Le date storiche vanno studiate con linea del tempo.","matem":"🔢 La percentuale si calcola: (parte/totale)×100.","scienz":"🔬 La fotosintesi clorofilliana produce ossigeno."};
+function getExplanation(question,correctAnswer){
+  const q=question.toLowerCase();
+  for(let [k,v] of Object.entries(EXPLANATIONS)) if(q.includes(k)) return v;
+  return `💡 Parola chiave: "${correctAnswer}". Ripassa il concetto.`;
+}
+
+// ===== HOME =====
+function getPersonalRecords(){
+  const stats=getStats(),sims=getSims(),streak=getStreak();
+  let ta=0,tc=0; Object.values(stats).forEach(s=>{ta+=s.asked;tc+=s.correct;});
+  const bs=sims.length?Math.max(...sims.map(s=>s.score)):0;
+  return{bestScore:ta?Math.round(tc/ta*100):0,bestSim:bs,streakDays:streak.last===todayStr()?streak.days:0,totalQuestions:ta};
+}
+function renderLeaderboard(){
+  const rec=getPersonalRecords(), bestCh=getBestChallengeScore();
+  const lbHtml=`<div class="leaderboard"><h3>🏆 Le mie statistiche migliori</h3>
+    <div class="ld-row"><span>📊 Miglior precisione studio</span><span class="ld-val">${rec.bestScore}%</span></div>
+    <div class="ld-row"><span>⏱️ Miglior simulazione</span><span class="ld-val">${rec.bestSim}%</span></div>
+    <div class="ld-row"><span>⚡ Record Sfida a Tempo</span><span class="ld-val">${bestCh>0?bestCh+' pt':'—'}</span></div>
+    <div class="ld-row"><span>🔥 Streak giorni</span><span class="ld-val">${rec.streakDays} giorni</span></div>
+    <div class="ld-row"><span>📝 Domande risposte</span><span class="ld-val">${rec.totalQuestions}</span></div></div>`;
+  const hd=$i('sHome'); const ex=hd.querySelector('.leaderboard'); if(ex) ex.remove();
+  const mc=hd.querySelector('.mcards'); if(mc) mc.insertAdjacentHTML('afterend',lbHtml);
+}
+function downloadProgressiJson(){
+  const now=new Date();
+  const ds=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  const data={metadata:{versione_file:'1.0',ultimo_aggiornamento:ds,app:CFG.nomeApp+' '+CFG.versione},dati_app:{stats:getStats(),weak:getWeak(),sims:getSims(),streak:getStreak(),ch_scores:getChallengeScores()}};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'});
+  const url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download='progressi_'+ds+'.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+}
+
+// ===== DARK MODE =====
+function toggleDarkMode(){
+  document.body.classList.toggle('dark');
+  const d=document.body.classList.contains('dark');
+  localStorage.setItem('pp26_darkmode',d);
+  const tc=$i('themeColor'); if(tc) tc.content=d?'#0f172a':'#1e3a5f';
+}
+function loadDarkMode(){ if(localStorage.getItem('pp26_darkmode')==='true') document.body.classList.add('dark'); }
+
+// ===== VARIABILI STATO =====
+let mode='home', studySec='TUTTE', studyOrder='random', fontSize=1;
+let sQ=[],sIdx=0,sKnew=0,sDidnt=0,sWrong=new Set(),sAns=false,sRev=false;
+let tQ=[],tAns=[],tIdx=0,tAnsed=false;
+let timerID=null,tSec=0,tStart=null;
+let currentQuestionIdx=0, examMode=false;
+
+// ===== NAVIGAZIONE =====
+function goHome(){ stopTimer(); stopChallengeTimer(); show('sHome'); setPB(0,'Scegli una modalità per iniziare'); mode='home'; renderLeaderboard(); updateRipassoBadge(); updateChRecordBadge(); }
+function goStudySetup(){ show('sStudySetup'); buildSGrid(); }
+function goTestSetup(){
+  show('sTestSetup');
+  const hasPenalty = ptErr()<0;
+  $i('testSetupInfo').innerHTML=
+    `<strong>📋 Regole simulazione</strong><br>
+    • <strong>${simN()} domande</strong> casuali dalla banca dati<br>
+    • <strong>${simMin()} minuti</strong> di tempo<br>
+    • Risposta corretta: <strong>+${ptCorr()}</strong> ${ptBase()!==10?'pt':''}<br>
+    ${hasPenalty?`• Risposta sbagliata: <strong style="color:var(--err)">${ptErr()} pt</strong><br>`:''}
+    ${ptSalt()!==0?`• Risposta saltata: <strong>${ptSalt()} pt</strong><br>`:'• Risposta saltata: <strong>0</strong> (nessuna penalità)<br>'}
+    • Punteggio minimo per passare: <strong>${simPass()}%</strong>`;
+}
+function goChallengeSetup(){
+  show('sChallengeSetup');
+  setPB(0,'⚡ Sfida a Tempo');
+  $i('challengeSetupInfo').innerHTML=
+    `<strong>⚡ Come funziona</strong><br>
+    • <strong>${chN()} domande</strong> casuali dalla banca dati<br>
+    • <strong>${chSec()} secondi</strong> per risposta<br>
+    • Punti in base alla velocità (max 100 pt/domanda)<br>
+    • 🔥 Bonus streak: 3 corrette di fila → +20% punti<br>
+    • Tempo scaduto = risposta saltata (0 punti)<br>
+    • 🏆 Top 5 punteggi personali salvati`;
+  const lb=$i('chSetupLb'); if(lb) renderChallengeLeaderboard(lb,null);
+}
+function setOrder(o){ studyOrder=o; $i('btnOrdRand').classList.toggle('active',o==='random'); $i('btnOrdSeq').classList.toggle('active',o==='sequential'); }
+
+function buildSGrid(){
+  const g=$i('sgrid'); g.innerHTML=''; const stats=getStats();
+  SECS.forEach(s=>{
+    const b=document.createElement('button');
+    b.className='sbtn'+(s===studySec?' active':'');
+    const n=s==='TUTTE'?ALL.length:ALL.filter(q=>q.s===s).length;
+    const st=stats[s], pct=st&&st.asked>0?Math.round(st.correct/st.asked*100):null;
+    const badge=pct!=null?` <span style="font-size:.65rem;opacity:.8;margin-left:3px">${pct}%</span>`:'';
+    b.innerHTML=(s==='TUTTE'?'📚 Tutte':s)+' ('+n+')'+badge;
+    b.onclick=()=>{ studySec=s; g.querySelectorAll('.sbtn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); };
+    g.appendChild(b);
+  });
+}
+
+function resetStudyExitBtn(){ $i('studyExitConfirm').style.display='none'; $i('btnStudyExitAsk').style.display=''; }
+function showStudyExitConfirm(){ $i('btnStudyExitAsk').style.display='none'; $i('studyExitConfirm').style.display='flex'; }
+function cancelStudyExit(){ resetStudyExitBtn(); }
+function doStudyExit(){ resetStudyExitBtn(); goHome(); }
+function resetTestExitBtn(){ $i('exitConfirm').style.display='none'; $i('btnExitAsk').style.display=''; }
+function showExitConfirm(){ $i('btnExitAsk').style.display='none'; $i('exitConfirm').style.display='flex'; }
+function cancelExit(){ resetTestExitBtn(); }
+function doExit(){ stopTimer(); resetTestExitBtn(); goHome(); }
+function showChExitConfirm(){ $i('chExitConfirm').style.display='flex'; }
+function cancelChExit(){ $i('chExitConfirm').style.display='none'; }
+function doChExit(){ stopChallengeTimer(); cancelChExit(); goHome(); }
+
+// ===== STUDIO =====
+function startStudy(){
+  mode='study'; resetStudyExitBtn(); updateStreak();
+  const pool=studySec==='TUTTE'?ALL:ALL.filter(q=>q.s===studySec);
+  const indices=pool.map((_,i)=>ALL.indexOf(pool[i]));
+  sQ=studyOrder==='random'?shuf(indices):[...indices];
+  sIdx=0; sKnew=0; sDidnt=0; sWrong=new Set(); sAns=false; sRev=false;
+  show('sStudyStats','sCard'); updSStats(); renderStudy();
+}
+function restartStudy(){ sRev=false; startStudy(); }
+function reviewErrors(){
+  sQ=shuf([...sWrong]); sIdx=0; sKnew=0; sDidnt=0; sWrong=new Set(); sAns=false; sRev=true;
+  show('sStudyStats','sCard'); updSStats(); renderStudy();
+}
+function updSStats(){
+  $i('stKnew').textContent=sKnew; $i('stDidnt').textContent=sDidnt; $i('stLeft').textContent=Math.max(0,sQ.length-sIdx);
+  setPB(sQ.length?sIdx/sQ.length*100:0,(sRev?'🔁 Revisione: ':'📚 Studio: ')+'Domanda '+Math.min(sIdx+1,sQ.length)+' di '+sQ.length);
+}
+function renderStudy(){
+  sAns=false;
+  if(sIdx>=sQ.length){ showDone(); return; }
+  currentQuestionIdx=sQ[sIdx];
+  const q=ALL[currentQuestionIdx];
+  const opts=shuf([{t:q.a,c:true},{t:q.b,c:false},{t:q.c,c:false},{t:q.d,c:false}]);
+  const lbls=['A','B','C','D'];
+  let h=`<div class="badge">${esc(q.s)}</div><div class="qnum">Domanda n.${q.n}</div><div class="qtxt">${esc(q.q)}</div><div class="opts">`;
+  opts.forEach((o,i)=>{ h+=`<button class="opt sopt" data-c="${o.c}"><span class="olbl">${lbls[i]}</span><span class="otxt">${esc(o.t)}</span></button>`; });
+  h+=`</div><div id="fb" style="display:none" class="fb"></div><div class="brow" id="brow" style="display:none"><button class="btn bk" id="bKn">✅ Lo sapevo</button><button class="btn bd" id="bDn">❌ Non lo sapevo</button></div>`;
+  $i('cardHTML').innerHTML=h;
+  document.querySelectorAll('.sopt').forEach(btn=>btn.addEventListener('click',function(){
+    if(sAns)return; sAns=true;
+    const ok=this.dataset.c==='true';
+    recordAnswer(currentQuestionIdx,ok);
+    revealAll(ok,this,q.a,[q.a,q.b,q.c,q.d]);
+    const fb=$i('fb'); if(fb){
+      fb.style.display='block'; fb.className='fb '+(ok?'ok':'er');
+      const kLow=anchor(q.a,[q.a,q.b,q.c,q.d]);
+      fb.innerHTML=ok
+        ?`<strong>✅ Corretto!</strong><div class="fba">🧠 <strong>Parola chiave:</strong> <span class="anchor">${esc(kLow)}</span><div style="margin-top:6px;font-size:.75rem;">📖 ${getExplanation(q.q,q.a)}</div></div>`
+        :`<strong>❌ Sbagliato.</strong> Risposta corretta: <strong>${esc(q.a)}</strong><div class="fba">🧠 <strong>Parola chiave:</strong> <span class="anchor">${esc(kLow)}</span><div style="margin-top:6px;font-size:.75rem;">📖 ${getExplanation(q.q,q.a)}</div></div>`;
+    }
+    $i('brow').style.display='flex';
+  }));
+  $i('bKn').addEventListener('click',()=>{ sKnew++; sIdx++; updSStats(); renderStudy(); });
+  $i('bDn').addEventListener('click',()=>{ sDidnt++; sWrong.add(currentQuestionIdx); sIdx++; updSStats(); renderStudy(); });
+  applyFS();
+}
+function showDone(){
+  show('sDone');
+  const pct=(sKnew+sDidnt)?Math.round(sKnew/(sKnew+sDidnt)*100):0;
+  const now=new Date();
+  const dataOra=now.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'})+' — '+now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+  $i('doneStats').innerHTML=`<div style="font-size:.75rem;color:var(--mu);margin-bottom:8px">📅 ${dataOra} &nbsp;·&nbsp; 📚 ${esc(studySec==='TUTTE'?'Tutte le materie':studySec)}</div>✅ Sapevo: <strong>${sKnew}</strong> &nbsp;❌ Non sapevo: <strong>${sDidnt}</strong><br>Percentuale: <strong>${pct}%</strong>`;
+  $i('btnRevErr').style.display=sDidnt?'':'none';
+}
+
+// ===== TEST =====
+function startExamMode(){ examMode=true; startTest(); }
+function startTest(){
+  mode='test'; stopTimer(); resetTestExitBtn(); updateStreak(); examMode=examMode||false;
+  tQ=shuf(ALL).slice(0,simN());
+  tAns=new Array(simN()).fill(null);
+  tIdx=0; tAnsed=false; tSec=simSec(); tStart=Date.now();
+  const nav=$i('sNav'); nav.innerHTML='';
+  for(let i=0;i<simN();i++){
+    const p=document.createElement('button');
+    p.id='tp'+i; p.className='tp'+(i===0?' cur':'');
+    p.textContent=i+1; p.dataset.i=i; nav.appendChild(p);
+  }
+  nav.onclick=e=>{ const p=e.target.closest('.tp'); if(!p)return; tIdx=parseInt(p.dataset.i); renderTest(); };
+  show('sTimer','sNav','sCard');
+  $i('tVal').textContent=fmt(tSec); $i('tPrg').style.width='100%'; $i('tPrg').classList.remove('dng');
+  startTimer(); renderTest();
+  setPB(0,`⏱️ Simulazione — ${simN()} domande · ${simMin()} minuti`);
+}
+function renderTest(){
+  tAnsed=tAns[tIdx]!==null;
+  currentQuestionIdx=ALL.indexOf(tQ[tIdx]);
+  const q=tQ[tIdx];
+  const opts=shuf([{t:q.a,c:true},{t:q.b,c:false},{t:q.c,c:false},{t:q.d,c:false}]);
+  const lbls=['A','B','C','D'];
+  let h=`<div class="badge">${esc(q.s)}</div><div class="qnum">Domanda n.${q.n}</div><div class="qtxt">${esc(q.q)}</div><div class="opts">`;
+  opts.forEach((o,i)=>{ h+=`<button class="opt topt" data-c="${o.c}" ${tAnsed?'disabled':''}><span class="olbl">${lbls[i]}</span><span class="otxt">${esc(o.t)}</span></button>`; });
+  h+=`</div><div id="fb" style="display:none" class="fb"></div><div class="brow" id="brow" style="display:${tAnsed?'flex':'none'}"><button class="btn bn" id="bNext">${tIdx<simN()-1?'Prossima →':'✅ Termina test'}</button></div>`;
+  $i('cardHTML').innerHTML=h;
+  if(tAnsed&&!examMode){
+    document.querySelectorAll('.topt').forEach(btn=>{ if(btn.dataset.c==='true') btn.classList.add('oc'); });
+    const ok=tAns[tIdx], fb=$i('fb');
+    if(fb){
+      fb.style.display='block'; fb.className='fb '+(ok?'ok':'er');
+      const kLow=anchor(q.a,[q.a,q.b,q.c,q.d]);
+      fb.innerHTML=ok
+        ?`<strong>✅ Corretto!</strong><div class="fba">🧠 <strong>Parola chiave:</strong> <span class="anchor">${esc(kLow)}</span></div>`
+        :`<strong>❌ Sbagliato.</strong> Risposta corretta: <strong>${esc(q.a)}</strong><div class="fba">🧠 <strong>Parola chiave:</strong> <span class="anchor">${esc(kLow)}</span><div style="margin-top:6px;font-size:.75rem;">📖 ${getExplanation(q.q,q.a)}</div></div>`;
+    }
+  }
+  document.querySelectorAll('.topt').forEach(btn=>btn.addEventListener('click',function(){
+    if(tAnsed)return; tAnsed=true;
+    const ok=this.dataset.c==='true';
+    tAns[tIdx]=ok;
+    recordAnswer(currentQuestionIdx,ok);
+    if(!examMode){
+      revealAll(ok,this,q.a,[q.a,q.b,q.c,q.d]);
+      const fb=$i('fb'); if(fb){
+        fb.style.display='block'; fb.className='fb '+(ok?'ok':'er');
+        const kLow=anchor(q.a,[q.a,q.b,q.c,q.d]);
+        fb.innerHTML=ok
+          ?`<strong>✅ Corretto!</strong><div class="fba">🧠 <strong>Parola chiave:</strong> <span class="anchor">${esc(kLow)}</span></div>`
+          :`<strong>❌ Sbagliato.</strong> Risposta corretta: <strong>${esc(q.a)}</strong><div class="fba">🧠 <strong>Parola chiave:</strong> <span class="anchor">${esc(kLow)}</span><div style="margin-top:6px;font-size:.75rem;">📖 ${getExplanation(q.q,q.a)}</div></div>`;
+      }
+    } else {
+      document.querySelectorAll('.topt').forEach(b=>b.disabled=true);
+    }
+    $i('brow').style.display='flex'; updTNav();
+  }));
+  $i('bNext').addEventListener('click',function(){ if(tIdx<simN()-1){ tIdx++; renderTest(); updTNav(); } else { finishTest(false); } });
+  updTNav(); applyFS();
+}
+function updTNav(){
+  for(let i=0;i<simN();i++){
+    const p=$i('tp'+i); if(!p)continue;
+    p.className='tp';
+    if(tAns[i]===true)p.classList.add('oc');
+    else if(tAns[i]===false)p.classList.add('ow');
+    if(i===tIdx)p.classList.add('cur');
+  }
+  $i('tQN').textContent=(tIdx+1)+'/'+simN();
+  setPB((tIdx+1)/simN()*100,'⏱️ Domanda '+(tIdx+1)+' di '+simN());
+}
+function startTimer(){
+  timerID=setInterval(()=>{
+    tSec--; $i('tVal').textContent=fmt(tSec); $i('tPrg').style.width=(tSec/simSec()*100)+'%';
+    if(tSec<=300) $i('tPrg').classList.add('dng');
+    if(tSec<=0){ stopTimer(); finishTest(true); }
+  },1000);
+}
+function stopTimer(){ if(timerID){ clearInterval(timerID); timerID=null; } }
+function finishTest(tout){
+  stopTimer(); examMode=false;
+  const ok=tAns.filter(a=>a===true).length;
+  const err=tAns.filter(a=>a===false).length;
+  const skip=tAns.filter(a=>a===null).length;
+  const perc=calcolaPerc(ok,err,skip);
+  const pass=perc>=simPass();
+  const punteggio=calcolaPunteggio(ok,err,skip);
+  const el=Math.floor((Date.now()-tStart)/1000);
+  recordSim(ok,err,skip,el);
+  show('sResults');
+  $i('rIco').textContent=tout?'⏰':(pass?'🏆':'📚');
+  $i('rTtl').textContent=tout?'Tempo scaduto!':(pass?'Promosso!':'Continua a studiare!');
+  $i('rSc').textContent=perc+'%'; $i('rSc').className='res-sc '+(pass?'pass':'fail');
+  $i('rOk').textContent=ok; $i('rErr').textContent=err; $i('rSkip').textContent=skip; $i('rT').textContent=fmt(el);
+  // Voto/punteggio
+  const elVoto=$i('rVoto');
+  if(elVoto && CFG.punteggio.mostraVoto){
+    if(ptBase()===10 && ptCorr()===0.125){
+      const votoRaw=ok*ptCorr();
+      const votoDisp=Number.isInteger(votoRaw)?votoRaw+'/10':votoRaw.toFixed(2).replace(/\.?0+$/,'')+'/10';
+      elVoto.innerHTML=`📋 Punteggio concorso: <strong style="font-size:1.2rem;color:var(--primary)">${votoDisp}</strong> <span style="font-size:.75rem;color:var(--mu)">(${ok} × ${ptCorr()})</span>`;
+    } else {
+      elVoto.innerHTML=`📋 Punteggio grezzo: <strong style="font-size:1.2rem;color:var(--primary)">${punteggio.toFixed(2)}</strong> <span style="font-size:.75rem;color:var(--mu)">(corrette×${ptCorr()}${ptErr()<0?' + sbagliate×'+ptErr():''})</span>`;
+    }
+  }
+  // Penalità
+  const penDiv=$i('rPenalita');
+  if(penDiv){
+    if(ptErr()<0 && err>0){
+      penDiv.style.display='block';
+      penDiv.innerHTML=`⚠️ Penalità applicate: ${err} risposte sbagliate × ${ptErr()} = <strong>${(err*ptErr()).toFixed(2)} pt</strong>`;
+    } else { penDiv.style.display='none'; }
+  }
+  $i('rvList').classList.add('hidden');
+  setPB(100,'Simulazione completata — '+ok+'/'+simN()+' corrette');
+}
+function showReview(){
+  const l=$i('rvList'); l.classList.remove('hidden');
+  let h='<h3>📖 Domande sbagliate o saltate</h3>'; let n=0;
+  tQ.forEach((q,i)=>{
+    if(tAns[i]===true)return; n++;
+    h+=`<div class="rvi"><div class="rq"><strong>${i+1}.</strong> ${esc(q.q)}</div><div class="ra">✅ ${esc(q.a)}</div><span class="rk">🧠 <strong>${esc(anchor(q.a,[q.a,q.b,q.c,q.d]))}</strong></span></div>`;
+  });
+  if(!n)h+='<p style="color:var(--ok)">🎉 Nessun errore!</p>';
+  l.innerHTML=h; l.scrollIntoView({behavior:'smooth'});
+}
+function revealAll(selectedOk,clicked,correctAns,allOpts){
+  document.querySelectorAll('.opt').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.c==='true'){
+      b.classList.add('oc');
+      const s=b.querySelector('.otxt');
+      if(s){ const kw=anchor(correctAns,allOpts); const re=new RegExp('('+kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','i'); s.innerHTML=esc(s.textContent).replace(re,'<span class="anchor">$1</span>'); }
+    } else if(b===clicked&&!selectedOk){ b.classList.add('ow'); }
+  });
+}
+function chFS(d){ fontSize=Math.max(.75,Math.min(1.5,fontSize+d*.1)); applyFS(); }
+function applyFS(){ const q=document.querySelector('.qtxt'); if(q)q.style.fontSize=fontSize+'rem'; document.querySelectorAll('.opt').forEach(o=>o.style.fontSize=(fontSize*.88)+'rem'); }
+
+// ===== SFIDA A TEMPO =====
+let chQ=[],chIdx=0,chScore=0,chStreak=0,chCorrect=0,chWrong=0;
+let chTimerID=null,chTimeLeft=30,chAns=false,chMaxStreak=0,chFastestTime=999,chBonusTotal=0;
+
+function stopChallengeTimer(){ if(chTimerID){ clearInterval(chTimerID); chTimerID=null; } }
+function updateChTimerUI(){
+  const bar=$i('chTimerBar'),val=$i('chTimerVal'); if(!bar||!val)return;
+  const pct=chTimeLeft/chSec()*100; bar.style.width=pct+'%';
+  if(pct<=20)bar.style.background='#ef4444';
+  else if(pct<=50)bar.style.background='#f59e0b';
+  else bar.style.background='#22c55e';
+  val.textContent=chTimeLeft+'s'; val.className='ch-timer-num'+(chTimeLeft<=5?' danger':'');
+}
+function startChallengeTimer(){
+  chTimeLeft=chSec(); updateChTimerUI();
+  chTimerID=setInterval(()=>{
+    chTimeLeft--; updateChTimerUI();
+    if(chTimeLeft<=0){ stopChallengeTimer(); if(!chAns){ chAns=true; chStreak=0; chWrong++; showChallengeTimeoutMsg(); setTimeout(()=>nextChallengeQuestion(),1400); } }
+  },1000);
+}
+function showChallengeTimeoutMsg(){
+  const card=$i('chCardHTML'); if(!card)return;
+  card.querySelectorAll('.chopt').forEach(b=>{ b.disabled=true; if(b.dataset.c==='true')b.classList.add('oc'); });
+  const fb=card.querySelector('#chfb');
+  if(fb){ fb.style.display='block'; fb.className='fb er'; fb.innerHTML='<strong>⏰ Tempo scaduto!</strong> Risposta corretta evidenziata sopra.'; }
+}
+function startChallenge(){
+  mode='challenge'; updateStreak(); stopChallengeTimer();
+  chQ=shuf(ALL).slice(0,chN());
+  chIdx=0;chScore=0;chStreak=0;chCorrect=0;chWrong=0;chMaxStreak=0;chFastestTime=999;chBonusTotal=0;chAns=false;
+  show('sChallengeHdr','sChallengeCard');
+  $i('chExitConfirm').style.display='none';
+  setPB(0,'⚡ Sfida a Tempo — Domanda 1 di '+chN());
+  renderChallenge();
+}
+function renderChallenge(){
+  chAns=false;
+  if(chIdx>=chN()){ finishChallenge(); return; }
+  const q=chQ[chIdx];
+  const opts=shuf([{t:q.a,c:true},{t:q.b,c:false},{t:q.c,c:false},{t:q.d,c:false}]);
+  const lbls=['A','B','C','D'];
+  $i('chQNum').textContent=(chIdx+1)+'/'+chN();
+  $i('chScoreDisplay').textContent=chScore;
+  $i('chStreakDisplay').textContent=chStreak>0?'🔥'+chStreak:'—';
+  let h=`<div class="badge">${esc(q.s)}</div><div class="qnum">Domanda n.${q.n}</div><div class="qtxt">${esc(q.q)}</div><div class="opts">`;
+  opts.forEach((o,i)=>{ h+=`<button class="opt chopt" data-c="${o.c}"><span class="olbl">${lbls[i]}</span><span class="otxt">${esc(o.t)}</span></button>`; });
+  h+=`</div><div id="chfb" style="display:none" class="fb"></div>`;
+  $i('chCardHTML').innerHTML=h;
+  document.querySelectorAll('.chopt').forEach(btn=>btn.addEventListener('click',function(){
+    if(chAns)return; chAns=true; stopChallengeTimer();
+    handleChallengeAnswer(this.dataset.c==='true', chSec()-chTimeLeft, this, q);
+  }));
+  startChallengeTimer();
+  setPB(chIdx/chN()*100,'⚡ Sfida a Tempo — Domanda '+(chIdx+1)+' di '+chN());
+  applyFS();
+}
+function handleChallengeAnswer(ok,timeUsed,clickedBtn,q){
+  let points=0,bonusMsg='',bonusPoints=0;
+  if(ok){
+    points=Math.max(10,Math.round((chTimeLeft/chSec())*100));
+    chCorrect++; chStreak++; if(chStreak>chMaxStreak)chMaxStreak=chStreak;
+    if(timeUsed<chFastestTime)chFastestTime=timeUsed;
+    if(chStreak>0&&chStreak%3===0){ bonusPoints=Math.round(points*0.20); points+=bonusPoints; chBonusTotal+=bonusPoints; bonusMsg=`+${bonusPoints} STREAK🔥`; }
+    chScore+=points;
+  } else { chStreak=0; chWrong++; }
+  $i('chScoreDisplay').textContent=chScore;
+  $i('chStreakDisplay').textContent=chStreak>0?'🔥'+chStreak:'—';
+  document.querySelectorAll('.chopt').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.c==='true'){ b.classList.add('oc'); const s=b.querySelector('.otxt'); if(s){ const kw=anchor(q.a,[q.a,q.b,q.c,q.d]); const re=new RegExp('('+kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','i'); s.innerHTML=esc(s.textContent).replace(re,'<span class="anchor">$1</span>'); } }
+    else if(b===clickedBtn&&!ok){ b.classList.add('ow'); }
+  });
+  const fb=$i('chfb'); if(fb){
+    fb.style.display='block'; fb.className='fb '+(ok?'ok':'er');
+    const kLow=anchor(q.a,[q.a,q.b,q.c,q.d]);
+    fb.innerHTML=ok
+      ?`<strong>✅ +${points} punti</strong>${bonusMsg?` <span style="background:#fed7aa;color:#92400e;padding:2px 7px;border-radius:5px;font-size:.8rem;margin-left:6px">${bonusMsg}</span>`:''}<div class="fba">🧠 <span class="anchor">${esc(kLow)}</span></div>`
+      :`<strong>❌ Sbagliato!</strong> Risposta: <strong>${esc(q.a)}</strong><div class="fba">🧠 <span class="anchor">${esc(kLow)}</span></div>`;
+  }
+  if(ok) showPtsPopup('+'+points+(bonusMsg?' 🔥':''),bonusPoints>0);
+  setTimeout(()=>nextChallengeQuestion(),1500);
+}
+function showPtsPopup(text,isBonus){
+  const wrap=$i('sChallengeHdr'); if(!wrap)return;
+  const rect=wrap.getBoundingClientRect();
+  const el=document.createElement('div');
+  el.className='pts-popup'+(isBonus?' bonus':'');
+  el.textContent=text; el.style.left=(rect.right-60)+'px'; el.style.top=(rect.bottom-20)+'px';
+  document.body.appendChild(el); setTimeout(()=>el.remove(),950);
+}
+function nextChallengeQuestion(){ chIdx++; if(chIdx>=chN()){ finishChallenge(); return; } renderChallenge(); }
+function finishChallenge(){
+  stopChallengeTimer();
+  const prevBest=getBestChallengeScore();
+  const rank=saveChallengeScore(chScore,chCorrect,chMaxStreak);
+  const isNewRecord=chScore>prevBest&&prevBest>0, isFirst=prevBest===0&&chScore>0;
+  show('sChallengeResults');
+  $i('chResIco').textContent=chCorrect>=chN()*.75?'🏆':chCorrect>=chN()*.5?'⚡':'📚';
+  $i('chResTtl').textContent=chCorrect>=chN()*.75?'Eccellente!':chCorrect>=chN()*.5?'Ottimo risultato!':'Continua a esercitarti!';
+  $i('chResScore').textContent=chScore; $i('chResOk').textContent=chCorrect; $i('chResErr').textContent=chN()-chCorrect;
+  $i('chResBest').textContent=chFastestTime<999?chFastestTime+'s':'—'; $i('chResMaxStreak').textContent=chMaxStreak;
+  const recDiv=$i('chRecordDiv'),recMsg=$i('chRecordMsg');
+  if(isFirst){recDiv.style.display='block';recMsg.textContent='🏆 PRIMO RECORD STABILITO!';}
+  else if(isNewRecord){recDiv.style.display='block';recMsg.textContent='🏆 NUOVO RECORD! +'+(chScore-prevBest)+' pt';}
+  else if(rank===1){recDiv.style.display='block';recMsg.textContent='🥇 Sei in testa alla classifica!';}
+  else{recDiv.style.display='none';}
+  const lbDiv=$i('chLeaderboard'); if(lbDiv) renderChallengeLeaderboard(lbDiv,chScore);
+  setPB(100,'⚡ Sfida completata — '+chScore+' punti · '+chCorrect+'/'+chN()+' corrette');
+  updateChRecordBadge();
+}
+
+// ===== RIPASSO =====
+function getWeakBySection(){
+  const weak=getWeak(),bySec={};
+  Object.entries(weak).forEach(([idx,d])=>{ const q=ALL[parseInt(idx)]; if(!q)return; if(!bySec[q.s])bySec[q.s]=[]; bySec[q.s].push({idx:parseInt(idx),q,d}); });
+  return bySec;
+}
+function updateRipassoBadge(){ const n=Object.keys(getWeak()).length, b=$i('ripassoBadge'); if(!b)return; if(n>0){b.textContent=n+' domande';b.style.display='inline';}else b.style.display='none'; }
+function goRipasso(){ show('sRipasso'); setPB(0,'🔁 Da ripassare'); updateRipassoBadge(); renderRipassoScreen(); }
+function renderRipassoScreen(){
+  const bySec=getWeakBySection(), container=$i('ripassoSections'); if(!container)return;
+  const secs=Object.keys(bySec);
+  if(!secs.length){ container.innerHTML=`<div class="empty-ripasso">🎉 Nessuna domanda da ripassare!</div>`; return; }
+  let h=''; const total=Object.values(bySec).reduce((a,b)=>a+b.length,0);
+  h+=`<button class="rip-start all" onclick="startRipasso('TUTTE')">🔁 Ripassa tutto (${total} domande)</button><br><br>`;
+  secs.forEach(sec=>{
+    const items=bySec[sec];
+    h+=`<div class="rip-sec"><div class="rip-sec-hdr"><h4>${esc(sec)}</h4><span class="rip-count">${items.length} domande</span></div>`;
+    items.slice(0,3).forEach(({q,d})=>{ const str=d.streak||0; h+=`<div class="rip-q"><span class="rq-txt">${esc(q.q.length>80?q.q.slice(0,80)+'…':q.q)}</span>${str>0?`<span class="rq-streak">✅ ${str}/3</span>`:''}</div>`; });
+    if(items.length>3)h+=`<div style="font-size:.75rem;color:var(--mu);margin-bottom:6px">…e altre ${items.length-3} domande</div>`;
+    h+=`<button class="rip-start sec" onclick="startRipasso('${esc(sec)}')">▶ Ripassa ${esc(sec)}</button></div>`;
+  });
+  container.innerHTML=h;
+}
+let rpQ=[],rpIdx=0,rpKnew=0,rpAns=false,rpSec='';
+function startRipasso(sec){
+  rpSec=sec; const weak=getWeak();
+  const pool=sec==='TUTTE'?Object.entries(weak):Object.entries(weak).filter(([idx])=>ALL[parseInt(idx)]&&ALL[parseInt(idx)].s===sec);
+  if(!pool.length){goRipasso();return;}
+  rpQ=shuf(pool.map(([idx])=>parseInt(idx))); rpIdx=0; rpKnew=0; rpAns=false;
+  show('sRipassoStudy'); updRpStats(); renderRipasso();
+}
+function updRpStats(){
+  $i('rsKnew').textContent=rpKnew; $i('rsLeft').textContent=Math.max(0,rpQ.length-rpIdx);
+  $i('rsSection').textContent=rpSec==='TUTTE'?'Tutte le materie':rpSec;
+  setPB(rpQ.length?rpIdx/rpQ.length*100:0,'🔁 Ripasso: domanda '+(rpIdx+1)+' di '+rpQ.length);
+}
+function renderRipasso(){
+  rpAns=false;
+  if(rpIdx>=rpQ.length){showRipassoDone();return;}
+  const qIdx=rpQ[rpIdx], q=ALL[qIdx], weak=getWeak(), d=weak[String(qIdx)]||{wrong:0,streak:0}, str=d.streak||0;
+  const opts=shuf([{t:q.a,c:true},{t:q.b,c:false},{t:q.c,c:false},{t:q.d,c:false}]);
+  let h=`<div class="badge">${esc(q.s)}</div><div style="font-size:.72rem;color:#dc2626;margin-bottom:6px">❌ Sbagliata ${d.wrong} volt${d.wrong===1?'a':'e'} · ${str>0?'✅ '+str+'/3 consecutive':'0/3 consecutive'}</div><div class="qnum">Domanda n.${q.n}</div><div class="qtxt">${esc(q.q)}</div><div class="opts">`;
+  opts.forEach((o,i)=>{ h+=`<button class="opt rpopt" data-c="${o.c}" data-idx="${qIdx}"><span class="olbl">${'ABCD'[i]}</span><span class="otxt">${esc(o.t)}</span></button>`; });
+  h+=`</div><div id="rpfb" style="display:none" class="fb"></div><div class="brow" id="brow" style="display:none"><button class="btn bn" id="bRpNext">Prossima →</button></div>`;
+  const rpc=$i('ripassoCardHTML'); rpc.innerHTML=h;
+  rpc.querySelectorAll('.rpopt').forEach(btn=>btn.addEventListener('click',function(){
+    if(rpAns)return; rpAns=true;
+    const ok=this.dataset.c==='true', qi=parseInt(this.dataset.idx);
+    recordRipasso(qi,ok);
+    rpc.querySelectorAll('.rpopt').forEach(b=>{ b.disabled=true; if(b.dataset.c==='true')b.classList.add('oc'); else if(b===this&&!ok)b.classList.add('ow'); });
+    const fb=$i('rpfb'); if(fb){
+      fb.style.display='block'; fb.className='fb '+(ok?'ok':'er');
+      const kLow=anchor(q.a,[q.a,q.b,q.c,q.d]);
+      fb.innerHTML=ok
+        ?`<strong>✅ Corretto!</strong><div class="fba">🧠 <strong>Parola chiave:</strong> <span class="anchor">${esc(kLow)}</span><div style="margin-top:6px;font-size:.75rem;">📖 ${getExplanation(q.q,q.a)}</div></div>`
+        :`<strong>❌ Sbagliato.</strong> Risposta corretta: <strong>${esc(q.a)}</strong><div class="fba">🧠 <strong>Parola chiave:</strong> <span class="anchor">${esc(kLow)}</span><div style="margin-top:6px;font-size:.75rem;">📖 ${getExplanation(q.q,q.a)}</div></div>`;
+    }
+    const brow=rpc.querySelector('#brow'); if(brow)brow.style.display='flex';
+    if(ok)rpKnew++;
+  }));
+  const bn=rpc.querySelector('#bRpNext'); if(bn)bn.addEventListener('click',()=>{ rpIdx++; updRpStats(); renderRipasso(); });
+  applyFS();
+}
+function showRipassoDone(){
+  const weak=getWeak();
+  const rimaste=rpSec==='TUTTE'?Object.keys(weak).length:Object.entries(weak).filter(([idx])=>ALL[parseInt(idx)]&&ALL[parseInt(idx)].s===rpSec).length;
+  show('sRipasso'); renderRipassoScreen(); updateRipassoBadge();
+  const toast=document.createElement('div');
+  toast.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--primary);color:white;padding:12px 20px;border-radius:12px;font-size:.85rem;z-index:9999;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.3)';
+  toast.innerHTML=`✅ Sessione completata! ${rpKnew} risposte corrette.<br><span style="font-size:.75rem;opacity:.8">${rimaste} domande ancora da ripassare</span>`;
+  document.body.appendChild(toast); setTimeout(()=>toast.remove(),3500);
+}
+function showRpExitConfirm(){ $i('btnRpExitAsk').style.display='none'; $i('rpExitConfirm').style.display='flex'; }
+function cancelRpExit(){ $i('btnRpExitAsk').style.display=''; $i('rpExitConfirm').style.display='none'; }
+function doRpExit(){ cancelRpExit(); goRipasso(); }
+
+// ===== PROGRESS =====
+function showProgress(){
+  show('sProgress'); setPB(0,'📊 I miei progressi');
+  const stats=getStats(),weak=getWeak(),sims=getSims(),streak=getStreak();
+  let ta=0,tc=0; Object.values(stats).forEach(s=>{ta+=s.asked;tc+=s.correct;});
+  const gp=ta>0?Math.round(tc/ta*100):0, sd=streak.last===todayStr()?streak.days:0;
+  const secTot={}; SECS.filter(s=>s!=='TUTTE').forEach(s=>{ secTot[s]=ALL.filter(q=>q.s===s).length; });
+  let h=`<div class="prog-grid">
+    <div class="prog-card ok-card"><div class="pv">${gp}%</div><div class="pl">Media globale</div></div>
+    <div class="prog-card"><div class="pv">${ta}</div><div class="pl">Domande risposte</div></div>
+    <div class="prog-card streak"><div class="pv">🔥 ${sd}</div><div class="pl">Giorni consecutivi</div></div>
+    <div class="prog-card"><div class="pv">${sims.length}</div><div class="pl">Simulazioni svolte</div></div>
+  </div><div class="prog-sec"><h4>📚 Progressi per sezione</h4>`;
+  SECS.filter(s=>s!=='TUTTE').forEach(s=>{
+    const st=stats[s]||{asked:0,correct:0}, tot=secTot[s]||1;
+    const seen=Math.min(st.asked,tot), seenPct=Math.round(seen/tot*100), accPct=st.asked>0?Math.round(st.correct/st.asked*100):0;
+    h+=`<div style="margin-bottom:12px"><div class="pbar-lbl"><span><strong>${s}</strong></span><span style="font-size:.7rem">Precisione: <strong>${accPct}%</strong> · Viste: <strong>${seenPct}%</strong> (${seen}/${tot})</span></div>
+      <div style="font-size:.65rem;color:var(--mu);margin-bottom:2px">📊 Precisione</div>
+      <div class="pbar-wrap"><div class="pbar-fill ${accPct>=70?'':accPct>=40?'mid':'low'}" style="width:${accPct}%"></div></div>
+      <div style="font-size:.65rem;color:var(--mu);margin-bottom:2px;margin-top:5px">📖 Domande viste</div>
+      <div class="pbar-wrap"><div class="pbar-fill" style="width:${seenPct}%;background:#3b82f6"></div></div></div>`;
+  });
+  const chScores=getChallengeScores();
+  h+=`</div><div class="prog-sec"><h4>⚡ Sfida a Tempo — Top 5</h4>`;
+  if(!chScores.length) h+=`<p style="color:var(--mu);font-size:.82rem;text-align:center">Nessuna sfida ancora.</p>`;
+  else{ const re=['🥇','🥈','🥉','4️⃣','5️⃣']; chScores.forEach((s,i)=>{ h+=`<div class="sim-row"><div><div class="sim-date">${re[i]} ${s.date} ${s.time}</div><div style="font-size:.72rem;color:var(--mu)">✅ ${s.correct}/${chN()} · 🔥 ${s.maxStreak}</div></div><div class="sim-sc pass">${s.score} pt</div></div>`; }); }
+  h+=`</div><div class="prog-sec"><h4>⚠️ Da ripassare (più sbagliate)</h4>`;
+  const wa=Object.entries(weak).sort((a,b)=>b[1].wrong-a[1].wrong).slice(0,10);
+  if(!wa.length) h+=`<p style="color:var(--ok);text-align:center;font-size:.85rem">🎉 Nessuna domanda da ripassare!</p>`;
+  else wa.forEach(([idx,d])=>{ const q=ALL[parseInt(idx)]; if(!q)return; h+=`<div class="ripassa">${esc(q.q)}<div class="rans">✅ ${esc(q.a)}</div><span class="ranch">🧠 ${esc(anchor(q.a,[q.a,q.b,q.c,q.d]))} · ❌ ${d.wrong} volt${d.wrong===1?'a':'e'}</span></div>`; });
+  h+=`</div><div class="prog-sec"><h4>⏱️ Ultime simulazioni</h4>`;
+  if(!sims.length) h+=`<p style="color:var(--mu);text-align:center;font-size:.85rem">Nessuna simulazione ancora</p>`;
+  else sims.slice(0,10).forEach(s=>{
+    const pass=s.score>=simPass();
+    const votoStr = ptBase()===10 && ptCorr()===0.125
+      ? (s.ok*ptCorr()).toFixed(2).replace(/\.?0+$/,'')+'/10'
+      : s.punteggio!=null ? s.punteggio.toFixed(2)+' pt' : s.score+'%';
+    h+=`<div class="sim-row"><div><div class="sim-date">${s.date} · ${fmt(s.elapsed)}</div><div style="font-size:.72rem;color:var(--mu)">${s.ok}/${simN()} corrette · <strong>${votoStr}</strong>${s.err>0&&ptErr()<0?` · penalità: ${(s.err*ptErr()).toFixed(2)} pt`:''}</div></div><div class="sim-sc ${pass?'pass':'fail'}">${s.score}%</div></div>`;
+  });
+  h+=`</div><div class="prog-sec"><h4>🔄 Salva/Ripristina progressi</h4>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <button onclick="downloadProgressiJson()" class="btn" style="flex:1;background:#1e3a5f;color:white;padding:11px;border:none">📤 Esporta</button>
+      <button onclick="importData()" class="btn" style="flex:1;background:#166534;color:white;padding:11px;border:none">📥 Importa</button>
+    </div>
+    <div id="importBox" style="display:none">
+      <label style="display:block;width:100%;padding:12px;background:#e0f2fe;color:#1e3a5f;border:2px solid #1e3a5f;border-radius:10px;text-align:center;font-weight:bold;font-size:.9rem;cursor:pointer;box-sizing:border-box">
+        📂 Apri file<input type="file" accept=".json" onchange="importFromFile(this)" style="display:none"></label>
+      <div style="text-align:center;font-size:.75rem;color:var(--mu);margin:8px 0">oppure incolla il JSON</div>
+      <textarea id="importTA" placeholder="Incolla qui il JSON…" style="width:100%;height:90px;font-size:.65rem;border:2px solid var(--brd);border-radius:8px;padding:8px;resize:none;font-family:monospace;box-sizing:border-box"></textarea>
+      <button onclick="doImport()" class="btn" style="width:100%;margin-top:6px;padding:12px;background:#166534;color:white;border:none;font-size:.95rem;font-weight:bold">✅ Importa e sostituisci</button>
+      <div id="importErr" style="display:none;text-align:center;color:var(--err);font-size:.78rem;margin-top:5px"></div>
+    </div></div>`;
+  $i('progContent').innerHTML=h;
+}
+function showResetConfirm(){ $i('resetAsk').style.display='none'; $i('resetConfirm').style.display='block'; const s=$i('resetSaveFirst');if(s)s.style.display='none'; }
+function showResetSaveFirst(){ $i('resetConfirm').style.display='none'; $i('resetSaveFirst').style.display='block'; }
+function cancelReset(){ $i('resetAsk').style.display='inline'; const c=$i('resetConfirm');if(c)c.style.display='none'; const s=$i('resetSaveFirst');if(s)s.style.display='none'; }
+function resetSaveAndClear(){ downloadProgressiJson(); setTimeout(()=>doResetProgress(),1000); }
+function doResetProgress(){ ['stats','weak','sims','streak','ch_scores'].forEach(k=>{ try{localStorage.removeItem(PFX+k);}catch(e){} }); cancelReset(); showProgress(); renderLeaderboard(); updateRipassoBadge(); updateChRecordBadge(); }
+function importData(){ const ib=$i('importBox');if(ib)ib.style.display='block'; const ta=$i('importTA');if(ta)ta.value=''; const e=$i('importErr');if(e)e.style.display='none'; }
+function importFromFile(input){
+  if(!input.files||!input.files[0])return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{ const p=JSON.parse(e.target.result),d=p.dati_app||p;
+      if(d.stats)storeSave('stats',d.stats); if(d.weak)storeSave('weak',d.weak); if(d.sims)storeSave('sims',d.sims); if(d.streak)storeSave('streak',d.streak); if(d.ch_scores)storeSave('ch_scores',d.ch_scores);
+      showToast('✅ <strong>Progressi importati!</strong>','#166534'); showProgress(); renderLeaderboard(); updateRipassoBadge(); updateChRecordBadge();
+    }catch(e){ const er=$i('importErr');if(er){er.textContent='❌ File non valido.';er.style.display='block';} }
+  }; reader.readAsText(input.files[0]);
+}
+function doImport(){
+  const ta=$i('importTA'),err=$i('importErr'); if(!ta)return;
+  const pasted=ta.value.trim(); if(!pasted){if(err){err.textContent='⚠️ Incolla prima il JSON!';err.style.display='block';}return;}
+  try{ const p=JSON.parse(pasted),d=p.dati_app||p;
+    if(d.stats)storeSave('stats',d.stats); if(d.weak)storeSave('weak',d.weak); if(d.sims)storeSave('sims',d.sims); if(d.streak)storeSave('streak',d.streak); if(d.ch_scores)storeSave('ch_scores',d.ch_scores);
+    showToast('✅ <strong>Progressi importati!</strong>','#166534'); showProgress(); renderLeaderboard(); updateRipassoBadge(); updateChRecordBadge(); if(err)err.style.display='none';
+  }catch(e){ if(err){err.textContent='❌ JSON non valido.';err.style.display='block';} }
+}
+function showToast(html,bg='#1e3a5f'){
+  const t=document.createElement('div');
+  t.style.cssText=`position:fixed;top:0;left:0;right:0;z-index:9999;background:${bg};color:white;padding:16px 20px;text-align:center;font-size:.88rem;line-height:1.7;box-shadow:0 4px 12px rgba(0,0,0,.3)`;
+  t.innerHTML=html; document.body.appendChild(t); setTimeout(()=>t.remove(),3000);
+}
+
+// ===== ESCI APP =====
+function showExitAppConfirm(){ const d=$i('exitAppDialog');if(d)d.style.display='flex'; }
+function cancelExitApp(){ const d=$i('exitAppDialog');if(d)d.style.display='none'; }
+function exitAppSaveFirst(){ downloadProgressiJson(); setTimeout(()=>{ cancelExitApp(); showToast('💾 Progressi salvati!','#166534'); },800); }
+function exitAppForce(){ cancelExitApp(); showToast('Chiudi la scheda del browser per uscire'); }
+
+// ===== PWA =====
+let pwaPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); pwaPrompt=e; const bar=$i('pwaBar'); if(bar&&!localStorage.getItem('pp26_pwa_dismissed'))bar.style.display='flex'; });
+function installPWA(){ if(pwaPrompt){ pwaPrompt.prompt(); pwaPrompt.userChoice.then(r=>{ if(r.outcome==='accepted')hidePWABar(); pwaPrompt=null; }); } else { alert('Per installare:\n• Chrome PC: icona ⊕ nella barra indirizzi\n• Android: menu ⋮ → Aggiungi a schermata Home\n• iPhone: Safari → Condividi → Aggiungi a schermata Home'); } }
+function hidePWABar(){ const bar=$i('pwaBar');if(bar)bar.style.display='none'; try{localStorage.setItem('pp26_pwa_dismissed','1');}catch(e){} }
+window.addEventListener('appinstalled',()=>hidePWABar());
+
+// ===== AVVIO — carica config.json + db.json in parallelo =====
+async function loadApp() {
+  try {
+    $i('ldSub').textContent = 'Lettura config.json e db.json…';
+    const [cfgRes, dbRes] = await Promise.all([
+      fetch('./config.json'),
+      fetch('./db.json')
+    ]);
+    if (!cfgRes.ok) throw new Error('config.json non trovato (HTTP ' + cfgRes.status + ')');
+    if (!dbRes.ok) throw new Error('db.json non trovato (HTTP ' + dbRes.status + ')');
+    CFG = await cfgRes.json();
+    ALL = await dbRes.json();
+    SECS = ['TUTTE', ...new Set(ALL.map(q => q.s))];
+
+    // Aggiorna UI con dati da config
+    document.title = CFG.nomeApp;
+    $i('hdrTitle').textContent = '🎓 ' + CFG.nomeConcorso;
+    $i('hdrSub').textContent = ALL.length + ' domande · ' + CFG.versione;
+    $i('simDesc').textContent = `${simN()} domande · ${simMin()} minuti · Punteggio e revisione errori.`;
+    $i('chDesc').textContent = `${chN()} domande · ${chSec()}s per risposta · Punteggio velocità + bonus streak 🔥`;
+
+    // Manifest PWA dinamico
+    const manifest = { name: CFG.nomeApp, short_name: CFG.nomeConcorso.split(' ').slice(-2).join(' '), description: CFG.nomeConcorso, start_url: './index.html', display: 'standalone', background_color: '#f0f4f8', theme_color: '#1e3a5f', icons: [{src:'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f46e.png',sizes:'72x72',type:'image/png'},{src:'https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f46e.svg',sizes:'any',type:'image/svg+xml'}] };
+    const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+    const link = $i('pwaManifest'); if(link) link.href = URL.createObjectURL(blob);
+
+    // Nascondi loading e mostra home
+    $i('loadingScreen').style.display = 'none';
+    loadDarkMode();
+    renderLeaderboard();
+    updateRipassoBadge();
+    updateChRecordBadge();
+    show('sHome');
+    setPB(0, 'Scegli una modalità per iniziare');
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+  } catch(err) {
+    $i('loadingScreen').innerHTML = `
+      <div style="font-size:3rem;margin-bottom:16px">⚠️</div>
+      <div style="font-size:1rem;margin-bottom:8px">Errore caricamento</div>
+      <div style="font-size:.78rem;opacity:.75;margin-bottom:6px;max-width:300px;text-align:center">${err.message}</div>
+      <div style="font-size:.72rem;opacity:.6;margin-bottom:20px;text-align:center;max-width:300px;line-height:1.7">
+        Assicurati che <strong>config.json</strong> e <strong>db.json</strong> siano nella stessa cartella di index.html.<br>
+        Non aprire index.html direttamente dal filesystem — serve un server HTTP (es. GitHub Pages).
+      </div>
+      <button onclick="location.reload()" style="background:#f9c74f;color:#1e3a5f;border:none;border-radius:8px;padding:12px 24px;font-size:.95rem;font-weight:bold;cursor:pointer">🔄 Riprova</button>`;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadApp);
+</script>
+</body>
+</html>
